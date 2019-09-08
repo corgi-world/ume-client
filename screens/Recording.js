@@ -87,6 +87,8 @@ const LIVE_COLOR = "#FF0000";
 const DISABLED_OPACITY = 0.5;
 const RATE_SCALE = 3.0;
 
+const gitTets = "dd";
+
 import ServerURL from "../utility/ServerURL";
 import axios from "axios";
 
