@@ -133,6 +133,10 @@ export default class Playlist extends React.Component {
         this.setState({
           files
         });
+      } else {
+        this.setState({
+          files: null
+        });
       }
     }
   };
@@ -153,6 +157,10 @@ export default class Playlist extends React.Component {
   }
 
   _selectedAudioFile = async selectedFileName => {
+    if (this.sound != null) {
+      this.sound.stopAsync();
+    }
+
     const s =
       ServerURL + "getAudio/" + selectedFileName;
     console.log(s);
@@ -165,7 +173,7 @@ export default class Playlist extends React.Component {
         { uri: s },
         {
           shouldPlay: false,
-          isLooping: true,
+          isLooping: false,
           isMuted: this.state.muted,
           volume: this.state.volume,
           rate: this.state.rate,
@@ -511,66 +519,6 @@ export default class Playlist extends React.Component {
                   />
                 </TouchableHighlight>
               </View>
-              <View />
-            </View>
-            <View
-              style={[
-                styles.buttonsContainerBase,
-                styles.buttonsContainerBottomRow
-              ]}
-            >
-              <Text
-                style={[
-                  styles.timestamp,
-                  {
-                    fontFamily:
-                      "cutive-mono-regular"
-                  }
-                ]}
-              >
-                Rate:
-              </Text>
-              <Slider
-                style={styles.rateSlider}
-                trackImage={ICON_TRACK_1.module}
-                thumbImage={ICON_THUMB_1.module}
-                value={
-                  this.state.rate / RATE_SCALE
-                }
-                onSlidingComplete={
-                  this
-                    ._onRateSliderSlidingComplete
-                }
-                disabled={
-                  !this.state.isPlaybackAllowed ||
-                  this.state.isLoading
-                }
-              />
-              <TouchableHighlight
-                underlayColor={BACKGROUND_COLOR}
-                style={styles.wrapper}
-                onPress={
-                  this._onPitchCorrectionPressed
-                }
-                disabled={
-                  !this.state.isPlaybackAllowed ||
-                  this.state.isLoading
-                }
-              >
-                <Text
-                  style={[
-                    {
-                      fontFamily:
-                        "cutive-mono-regular"
-                    }
-                  ]}
-                >
-                  PC:{" "}
-                  {this.state.shouldCorrectPitch
-                    ? "yes"
-                    : "no"}
-                </Text>
-              </TouchableHighlight>
             </View>
             <View />
           </View>
@@ -692,8 +640,5 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     paddingRight: 20,
     paddingLeft: 20
-  },
-  rateSlider: {
-    width: DEVICE_WIDTH / 2.0
   }
 });

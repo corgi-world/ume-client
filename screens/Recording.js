@@ -71,7 +71,7 @@ export default class Recording extends React.Component {
     };
     this.recordingSettings = JSON.parse(
       JSON.stringify(
-        Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       )
     );
     // // UNCOMMENT THIS TO TEST maxFileSize:
