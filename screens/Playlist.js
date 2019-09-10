@@ -12,7 +12,6 @@ import {
 
 import { Asset } from "expo-asset";
 import { Audio } from "expo-av";
-import * as FileSystem from "expo-file-system";
 import * as Font from "expo-font";
 import * as Permissions from "expo-permissions";
 
@@ -24,17 +23,6 @@ class Icon {
     Asset.fromModule(this.module).downloadAsync();
   }
 }
-
-const ICON_RECORD_BUTTON = new Icon(
-  require("../assets/images/record_button.png"),
-  70,
-  119
-);
-const ICON_RECORDING = new Icon(
-  require("../assets/images/record_icon.png"),
-  20,
-  14
-);
 
 const ICON_PLAY_BUTTON = new Icon(
   require("../assets/images/play_button.png"),
@@ -91,6 +79,8 @@ const RATE_SCALE = 3.0;
 import ServerURL from "../utility/ServerURL";
 import axios from "axios";
 
+import FileManager from "../components/FileManager";
+
 export default class Playlist extends React.Component {
   constructor(props) {
     super(props);
@@ -112,7 +102,9 @@ export default class Playlist extends React.Component {
       fontLoaded: false,
       shouldCorrectPitch: true,
       volume: 1.0,
-      rate: 1.0
+      rate: 1.0,
+
+      files: null
     };
     this.recordingSettings = JSON.parse(
       JSON.stringify(
@@ -123,8 +115,26 @@ export default class Playlist extends React.Component {
     // this.recordingSettings.android['maxFileSize'] = 12000;
   }
 
-  _onFocused = () => {
-    console.log("gogo");
+  _onFocused = async () => {
+    let result = null;
+    try {
+      result = await axios.post(
+        ServerURL + "get",
+        { timeout: 2000 }
+      );
+    } catch (err) {
+      console.log("token axios 1");
+    }
+
+    const r = result.data.result;
+    if (r == "OK") {
+      const files = result.data.files;
+      if (files != 0) {
+        this.setState({
+          files
+        });
+      }
+    }
   };
 
   componentDidMount() {
@@ -140,43 +150,42 @@ export default class Playlist extends React.Component {
       });
       this.setState({ fontLoaded: true });
     })();
-    this._askForPermissions();
-
-    (async () => {
-      const s =
-        ServerURL +
-        "getAudio/1567940715499-hello.caf";
-      console.log(s);
-
-      try {
-        const {
-          sound: soundObject,
-          status
-        } = await Audio.Sound.createAsync(
-          { uri: s },
-          {
-            shouldPlay: false,
-            isLooping: true,
-            isMuted: this.state.muted,
-            volume: this.state.volume,
-            rate: this.state.rate,
-            shouldCorrectPitch: this.state
-              .shouldCorrectPitch
-          },
-          this._updateScreenForSoundStatus
-        );
-
-        this.sound = soundObject;
-
-        this.setState({
-          isLoading: false
-        });
-        // Your sound is playing!
-      } catch (error) {
-        // An error occurred!
-      }
-    })();
   }
+
+  _selectedAudioFile = async selectedFileName => {
+    const s =
+      ServerURL + "getAudio/" + selectedFileName;
+    console.log(s);
+
+    try {
+      const {
+        sound: soundObject,
+        status
+      } = await Audio.Sound.createAsync(
+        { uri: s },
+        {
+          shouldPlay: false,
+          isLooping: true,
+          isMuted: this.state.muted,
+          volume: this.state.volume,
+          rate: this.state.rate,
+          shouldCorrectPitch: this.state
+            .shouldCorrectPitch
+        },
+        this._updateScreenForSoundStatus
+      );
+
+      this.sound = soundObject;
+
+      this.setState({
+        isLoading: false
+      });
+      // Your sound is playing!
+    } catch (error) {
+      // An error occurred!
+      console.log(error);
+    }
+  };
 
   _askForPermissions = async () => {
     const response = await Permissions.askAsync(
@@ -568,10 +577,14 @@ export default class Playlist extends React.Component {
         </View>
         <View
           style={{
-            flex: 1,
-            backgroundColor: "pink"
+            flex: 1
           }}
-        ></View>
+        >
+          <FileManager
+            _onSelect={this._selectedAudioFile}
+            files={this.state.files}
+          />
+        </View>
       </SafeAreaView>
     );
   }
@@ -604,33 +617,6 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     minHeight: DEVICE_HEIGHT / 2.0,
     maxHeight: DEVICE_HEIGHT / 2.0
-  },
-  recordingContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    alignSelf: "stretch",
-    minHeight: ICON_RECORD_BUTTON.height,
-    maxHeight: ICON_RECORD_BUTTON.height
-  },
-  recordingDataContainer: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    minHeight: ICON_RECORD_BUTTON.height,
-    maxHeight: ICON_RECORD_BUTTON.height,
-    minWidth: ICON_RECORD_BUTTON.width * 3.0,
-    maxWidth: ICON_RECORD_BUTTON.width * 3.0
-  },
-  recordingDataRowContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    minHeight: ICON_RECORDING.height,
-    maxHeight: ICON_RECORDING.height
   },
   playbackContainer: {
     flex: 1,

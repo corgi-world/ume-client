@@ -2,7 +2,6 @@ import React from "react";
 import {
   Dimensions,
   Image,
-  Slider,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -35,49 +34,6 @@ const ICON_RECORDING = new Icon(
   14
 );
 
-const ICON_PLAY_BUTTON = new Icon(
-  require("../assets/images/play_button.png"),
-  34,
-  51
-);
-const ICON_PAUSE_BUTTON = new Icon(
-  require("../assets/images/pause_button.png"),
-  34,
-  51
-);
-const ICON_STOP_BUTTON = new Icon(
-  require("../assets/images/stop_button.png"),
-  22,
-  22
-);
-
-const ICON_MUTED_BUTTON = new Icon(
-  require("../assets/images/muted_button.png"),
-  67,
-  58
-);
-const ICON_UNMUTED_BUTTON = new Icon(
-  require("../assets/images/unmuted_button.png"),
-  67,
-  58
-);
-
-const ICON_TRACK_1 = new Icon(
-  require("../assets/images/track_1.png"),
-  166,
-  5
-);
-const ICON_THUMB_1 = new Icon(
-  require("../assets/images/thumb_1.png"),
-  18,
-  19
-);
-const ICON_THUMB_2 = new Icon(
-  require("../assets/images/thumb_2.png"),
-  15,
-  19
-);
-
 const {
   width: DEVICE_WIDTH,
   height: DEVICE_HEIGHT
@@ -86,8 +42,6 @@ const BACKGROUND_COLOR = "#FFFFFF";
 const LIVE_COLOR = "#FF0000";
 const DISABLED_OPACITY = 0.5;
 const RATE_SCALE = 3.0;
-
-const gitTets = "dd";
 
 import ServerURL from "../utility/ServerURL";
 import axios from "axios";
@@ -142,34 +96,6 @@ export default class Recording extends React.Component {
       haveRecordingPermissions:
         response.status === "granted"
     });
-  };
-
-  _updateScreenForSoundStatus = status => {
-    if (status.isLoaded) {
-      this.setState({
-        soundDuration: status.durationMillis,
-        soundPosition: status.positionMillis,
-        shouldPlay: status.shouldPlay,
-        isPlaying: status.isPlaying,
-        rate: status.rate,
-        muted: status.isMuted,
-        volume: status.volume,
-        shouldCorrectPitch:
-          status.shouldCorrectPitch,
-        isPlaybackAllowed: true
-      });
-    } else {
-      this.setState({
-        soundDuration: null,
-        soundPosition: null,
-        isPlaybackAllowed: false
-      });
-      if (status.error) {
-        console.log(
-          `FATAL PLAYER ERROR: ${status.error}`
-        );
-      }
-    }
   };
 
   _updateScreenForRecordingStatus = status => {
@@ -244,8 +170,6 @@ export default class Recording extends React.Component {
       this.recording.getURI()
     );
 
-    console.log(info.uri);
-
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       interruptionModeIOS:
@@ -272,38 +196,68 @@ export default class Recording extends React.Component {
       }
     );
 
-    await this._saveRecording(info.uri);
+    await this._saveRecording(info.uri, status);
 
     this.setState({
       isLoading: false
     });
   }
 
-  _saveRecording = async file => {
+  _toDateString(date) {
+    const s =
+      date.getFullYear() +
+      "" +
+      this._pad(date.getMonth() + 1, 2) +
+      "" +
+      this._pad(date.getDate(), 2) +
+      "-" +
+      this._pad(date.getHours(), 2) +
+      "" +
+      this._pad(date.getMinutes(), 2) +
+      "" +
+      this._pad(date.getSeconds(), 2);
+    return s;
+  }
+  _pad(n, width) {
+    n = n + "";
+    return n.length >= width
+      ? n
+      : new Array(width - n.length + 1).join(
+          "0"
+        ) + n;
+  }
+
+  _saveRecording = async (file, status) => {
     const data = new FormData();
     const cleanFile = file.replace("file://", "");
+
+    const fileName = this._toDateString(
+      new Date()
+    );
+
     data.append("audio", {
-      name: "hello.caf",
+      name: fileName + ".caf",
       uri: cleanFile
     });
 
-    let result = null;
+    data.append("fileName", fileName);
+    data.append(
+      "fileTime",
+      this._getMMSSFromMillis(
+        status.durationMillis
+      )
+    );
+
     try {
-      result = await axios.post(
-        ServerURL + "save",
-        data,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data"
-          }
+      await axios.post(ServerURL + "save", data, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data"
         }
-      );
+      });
     } catch (error) {
       console.log("error");
     }
-
-    console.log(result.data);
   };
 
   _onRecordPressed = () => {
