@@ -25,7 +25,7 @@ export default class FileManager extends Component {
             alignItems: "center"
           }}
         >
-          <Text>~</Text>
+          <Text></Text>
         </View>
       );
     } else {

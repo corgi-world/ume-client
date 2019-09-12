@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
 
 import MainTabContainer from "./navigation/MainTab";
+import MainStackContainer from "./navigation/MainStack";
 
 export default class App extends Component {
   constructor(props) {
@@ -10,6 +10,6 @@ export default class App extends Component {
   }
 
   render() {
-    return <MainTabContainer />;
+    return <MainStackContainer />;
   }
 }
