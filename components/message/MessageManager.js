@@ -139,7 +139,7 @@ export default class MessageManager extends Component {
                   text={message.text}
                   delay={message.delay}
                   _isFocused={
-                    this.props._isFocusedIndex ==
+                    this.props.focusedIndex ==
                     message.index
                   }
                 />

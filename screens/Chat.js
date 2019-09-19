@@ -150,8 +150,8 @@ export default class Chat extends Component {
                   _updateComplete={this._updateComplete.bind(
                     this
                   )}
-                  _isFocusedIndex={
-                    message._isFocusedIndex
+                  focusedIndex={
+                    message.focusedIndex
                   }
                   isPlayback={message.isPlayback}
                   playbackFileName={
@@ -177,11 +177,14 @@ export default class Chat extends Component {
 
     if (follow == this.followEnum.main) {
       if (level == 0) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 1) {
         nextMode = this.modeEnum.text;
+      } else if (level == 1) {
+        nextMode = this.modeEnum.button;
       } else if (level == 2) {
         nextMode = this.modeEnum.record;
+      } else if (level == 3) {
+        nextFollow = this.followEnum.end;
+        nextMode = this.modeEnum.none;
       }
     }
 
@@ -200,7 +203,7 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     if (follow == this.followEnum.main) {
-      if (level == 0) {
+      if (level == 1) {
         nextMode = this.modeEnum.wait;
         nextLevel = level + 1;
       }
@@ -210,7 +213,10 @@ export default class Chat extends Component {
       text,
       nextFollow,
       nextMode,
-      nextLevel
+      nextLevel,
+      null,
+      null,
+      0
     );
   };
   _sendText = async text => {
@@ -221,7 +227,7 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     if (follow == this.followEnum.main) {
-      if (level == 1) {
+      if (level == 0) {
         nextMode = this.modeEnum.wait;
         nextLevel = level + 1;
       }
@@ -264,7 +270,8 @@ export default class Chat extends Component {
     nextMode,
     nextLevel,
     isPlayback,
-    playbackFileName
+    playbackFileName,
+    focusedIndex
   ) {
     const userMessageId = uuidv1();
     const userObject = {
@@ -274,7 +281,7 @@ export default class Chat extends Component {
         isComplete: true,
         texts: [userText],
         delays: 0,
-        isPlayback: isPlayback,
+        isPlayback,
         playbackFileName
       }
     };
@@ -286,7 +293,8 @@ export default class Chat extends Component {
         type: this.messageTypeEnum.service,
         isComplete: false,
         texts: MessageScript[nextLevel],
-        delays: Delay[nextLevel]
+        delays: Delay[nextLevel],
+        focusedIndex
       }
     };
 
