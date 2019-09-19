@@ -11,6 +11,10 @@ export default class Index extends Component {
     this.state = {};
   }
 
+  componentDidMount() {
+    this.props.navigation.navigate("chat");
+  }
+
   render() {
     return (
       <View

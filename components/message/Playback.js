@@ -71,7 +71,7 @@ const {
   width: DEVICE_WIDTH,
   height: DEVICE_HEIGHT
 } = Dimensions.get("window");
-const BACKGROUND_COLOR = "#FFFFFF";
+const BACKGROUND_COLOR = "#15badb";
 const LIVE_COLOR = "#FF0000";
 const DISABLED_OPACITY = 0.5;
 const RATE_SCALE = 3.0;
@@ -227,6 +227,9 @@ export default class Playlist extends React.Component {
       if (this.state.isPlaying) {
         this.sound.pauseAsync();
       } else {
+        if (this.sound != null) {
+          this.sound.stopAsync();
+        }
         this.sound.playAsync();
       }
     }
