@@ -10,11 +10,9 @@ import {
 import uuidv1 from "uuid/v1";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 
-import {
-  MessageScript,
-  Delay,
-  ButtonScript
-} from "../scripts/Scripts";
+import CommonScript from "../scripts/CommonScript";
+import RelationsScript from "../scripts/RelationsScript";
+import WorkplaceScript from "../scripts/WorkplaceScript";
 
 import MessageManager from "../components/message/MessageManager";
 
@@ -26,6 +24,9 @@ import Recording from "../components/Inputs/Recording";
 export default class Chat extends Component {
   constructor(props) {
     super(props);
+
+    this.script = CommonScript;
+    this.audioFileName = null;
 
     this.followEnum = {
       none: 0,
@@ -85,8 +86,8 @@ export default class Chat extends Component {
         id: serviceMessageId,
         type: this.messageTypeEnum.service,
         isComplete: false,
-        texts: MessageScript[0],
-        delays: Delay[0]
+        texts: this.script.MessageScript[0],
+        delays: this.script.Delay[0]
       }
     };
 
@@ -154,8 +155,11 @@ export default class Chat extends Component {
                     message.focusedIndex
                   }
                   isPlayback={message.isPlayback}
-                  playbackFileName={
-                    message.playbackFileName
+                  isRecordingCheck={
+                    message.isRecordingCheck
+                  }
+                  audioFileName={
+                    message.audioFileName
                   }
                 />
               );
@@ -177,14 +181,27 @@ export default class Chat extends Component {
 
     if (follow == this.followEnum.main) {
       if (level == 0) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 1) {
         nextMode = this.modeEnum.button;
+      } else if (level == 1) {
+        nextMode = this.modeEnum.text;
       } else if (level == 2) {
-        nextMode = this.modeEnum.record;
+        nextMode = this.modeEnum.button;
       } else if (level == 3) {
-        nextFollow = this.followEnum.end;
-        nextMode = this.modeEnum.none;
+        nextMode = this.modeEnum.button;
+      } else if (level == 4) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 5) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 6) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 7) {
+        nextMode = this.modeEnum.record;
+      } else if (level == 8) {
+        nextMode = this.modeEnum.text;
+      } else if (level == 9) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 10) {
+        nextMode = this.modeEnum.button;
       }
     }
 
@@ -201,11 +218,17 @@ export default class Chat extends Component {
     let nextFollow = follow;
     let nextMode = mode;
     let nextLevel = level;
+    let isPlayback = null;
+    let isRecordingCheck = null;
+    let audioFileName = null;
+    let focusedIndex = null;
 
     if (follow == this.followEnum.main) {
-      if (level == 1) {
-        nextMode = this.modeEnum.wait;
-        nextLevel = level + 1;
+      nextMode = this.modeEnum.wait;
+      nextLevel = level + 1;
+
+      if (nextLevel == 7) {
+        focusedIndex = 1;
       }
     }
 
@@ -214,9 +237,10 @@ export default class Chat extends Component {
       nextFollow,
       nextMode,
       nextLevel,
-      null,
-      null,
-      0
+      isPlayback,
+      isRecordingCheck,
+      audioFileName,
+      focusedIndex
     );
   };
   _sendText = async text => {
@@ -227,9 +251,18 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     if (follow == this.followEnum.main) {
-      if (level == 0) {
-        nextMode = this.modeEnum.wait;
-        nextLevel = level + 1;
+      nextMode = this.modeEnum.wait;
+      nextLevel = level + 1;
+      if (level == 1) {
+        if (
+          text === "A" ||
+          text === "a" ||
+          text === "ㅁ"
+        ) {
+          this.script = RelationsScript;
+        } else {
+          this.script = WorkplaceScript;
+        }
       }
     }
 
@@ -243,12 +276,14 @@ export default class Chat extends Component {
   _record = async fileName => {
     const { follow, mode, level } = this.state;
 
+    this.audioFileName = fileName;
+
     let nextFollow = follow;
     let nextMode = mode;
     let nextLevel = level;
 
     if (follow == this.followEnum.main) {
-      if (level == 2) {
+      if (level == 7) {
         nextMode = this.modeEnum.wait;
         nextLevel = level + 1;
       }
@@ -260,6 +295,7 @@ export default class Chat extends Component {
       nextMode,
       nextLevel,
       true,
+      false,
       fileName
     );
   };
@@ -269,8 +305,9 @@ export default class Chat extends Component {
     nextFollow,
     nextMode,
     nextLevel,
+    isRecordingCheck,
     isPlayback,
-    playbackFileName,
+    audioFileName,
     focusedIndex
   ) {
     const userMessageId = uuidv1();
@@ -281,8 +318,10 @@ export default class Chat extends Component {
         isComplete: true,
         texts: [userText],
         delays: 0,
+        isRecordingCheck,
         isPlayback,
-        playbackFileName
+        audioFileName,
+        focusedIndex
       }
     };
 
@@ -292,8 +331,13 @@ export default class Chat extends Component {
         id: serviceMessageId,
         type: this.messageTypeEnum.service,
         isComplete: false,
-        texts: MessageScript[nextLevel],
-        delays: Delay[nextLevel],
+        texts: this.script.MessageScript[
+          nextLevel
+        ],
+        delays: this.script.Delay[nextLevel],
+        isRecordingCheck,
+        isPlayback,
+        audioFileName,
         focusedIndex
       }
     };
@@ -318,7 +362,7 @@ export default class Chat extends Component {
   _makeInput() {
     const { follow, mode, level } = this.state;
 
-    if (follow == this.followEnum.end) {
+    if (follow == this.followEnum.none) {
       return <View />;
     }
 
@@ -327,7 +371,7 @@ export default class Chat extends Component {
     } else if (mode == this.modeEnum.wait) {
       return (
         <Waiting
-          script={ButtonScript[level]}
+          script={this.script.ButtonScript[level]}
           level={level}
           _scrollToEnd={this._scrollToEnd}
         />
@@ -335,7 +379,7 @@ export default class Chat extends Component {
     } else if (mode == this.modeEnum.button) {
       return (
         <Buttons
-          script={ButtonScript[level]}
+          script={this.script.ButtonScript[level]}
           _pushedInputBlock={
             this._pushedInputBlock
           }

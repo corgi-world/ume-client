@@ -29,7 +29,8 @@ export default class MessageManager extends Component {
       texts,
       delays,
       isPlayback,
-      playbackFileName
+      isRecordingCheck,
+      audioFileName
     } = this.props;
     const length = texts.length;
 
@@ -47,7 +48,8 @@ export default class MessageManager extends Component {
           text: texts[i],
           delay: 0,
           isPlayback,
-          playbackFileName
+          isRecordingCheck,
+          audioFileName
         };
 
         objects[id] = object;
@@ -65,7 +67,8 @@ export default class MessageManager extends Component {
         text: texts[0],
         delay: delays[0],
         isPlayback,
-        playbackFileName
+        isRecordingCheck,
+        audioFileName
       };
       objects[id] = object;
       this.setState({ messages: objects });
@@ -138,6 +141,13 @@ export default class MessageManager extends Component {
                   isFirst={message.isFirst}
                   text={message.text}
                   delay={message.delay}
+                  isPlayback={message.isPlayback}
+                  isRecordingCheck={
+                    message.isRecordingCheck
+                  }
+                  audioFileName={
+                    message.audioFileName
+                  }
                   _isFocused={
                     this.props.focusedIndex ==
                     message.index
@@ -157,8 +167,15 @@ export default class MessageManager extends Component {
                   text={message.text}
                   delay={message.delay}
                   isPlayback={message.isPlayback}
-                  playbackFileName={
-                    message.playbackFileName
+                  isRecordingCheck={
+                    message.isRecordingCheck
+                  }
+                  audioFileName={
+                    message.audioFileName
+                  }
+                  _isFocused={
+                    this.props.focusedIndex ==
+                    message.index
                   }
                 />
               );

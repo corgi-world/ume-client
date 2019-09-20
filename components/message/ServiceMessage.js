@@ -12,6 +12,9 @@ const { width, height } = Dimensions.get(
 
 import TypingAnimation from "./Typing";
 
+import Playback from "./Playback";
+import RecordingCheck from "./RecordingCheck";
+
 export default class ServiceMesseage extends Component {
   constructor(props) {
     super(props);

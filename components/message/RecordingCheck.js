@@ -79,7 +79,7 @@ const RATE_SCALE = 3.0;
 import ServerURL from "../../utility/ServerURL";
 import axios from "axios";
 
-export default class Playback extends React.Component {
+export default class RecordingCheck extends React.Component {
   constructor(props) {
     super(props);
     this.recording = null;
@@ -370,7 +370,7 @@ export default class Playback extends React.Component {
       <View
         style={{
           maxWidth: DEVICE_WIDTH - 150,
-          height: 200
+          height: 120
         }}
       >
         <View
@@ -408,86 +408,6 @@ export default class Playback extends React.Component {
             <Text>
               {this._getPlaybackTimestamp()}
             </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center"
-            }}
-          >
-            <TouchableHighlight
-              underlayColor={BACKGROUND_COLOR}
-              onPress={this._onMutePressed}
-              disabled={
-                !this.state.isPlaybackAllowed ||
-                this.state.isLoading
-              }
-            >
-              <Image
-                style={styles.image}
-                source={
-                  this.state.muted
-                    ? ICON_MUTED_BUTTON.module
-                    : ICON_UNMUTED_BUTTON.module
-                }
-              />
-            </TouchableHighlight>
-            <Slider
-              style={styles.volumeSlider}
-              trackImage={ICON_TRACK_1.module}
-              thumbImage={ICON_THUMB_2.module}
-              value={1}
-              onValueChange={
-                this._onVolumeSliderValueChange
-              }
-              disabled={
-                !this.state.isPlaybackAllowed ||
-                this.state.isLoading
-              }
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 10
-            }}
-          >
-            <TouchableHighlight
-              underlayColor={BACKGROUND_COLOR}
-              style={{ marginRight: 10 }}
-              onPress={this._onPlayPausePressed}
-              disabled={
-                !this.state.isPlaybackAllowed ||
-                this.state.isLoading
-              }
-            >
-              <Image
-                style={styles.image}
-                source={
-                  this.state.isPlaying
-                    ? ICON_PAUSE_BUTTON.module
-                    : ICON_PLAY_BUTTON.module
-                }
-              />
-            </TouchableHighlight>
-            <TouchableHighlight
-              underlayColor={BACKGROUND_COLOR}
-              style={styles.wrapper}
-              onPress={this._onStopPressed}
-              disabled={
-                !this.state.isPlaybackAllowed ||
-                this.state.isLoading
-              }
-            >
-              <Image
-                style={styles.image}
-                source={ICON_STOP_BUTTON.module}
-              />
-            </TouchableHighlight>
           </View>
         </View>
       </View>

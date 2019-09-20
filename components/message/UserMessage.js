@@ -13,6 +13,7 @@ const { width, height } = Dimensions.get(
 import TypingAnimation from "./Typing";
 
 import Playback from "./Playback";
+import RecordingCheck from "./RecordingCheck";
 
 export default class ServiceMesseage extends Component {
   constructor(props) {
@@ -41,7 +42,8 @@ export default class ServiceMesseage extends Component {
     const { isWait } = false;
     const {
       isPlayback,
-      playbackFileName
+      isRecordingCheck,
+      audioFileName
     } = this.props;
 
     if (isWait) {
@@ -57,7 +59,32 @@ export default class ServiceMesseage extends Component {
         </View>
       );
     } else {
-      if (isPlayback) {
+      if (isRecordingCheck) {
+        return (
+          <View
+            style={{
+              alignItems: "flex-start",
+              justifyContent: "flex-end",
+              flexDirection: "row",
+              marginTop: 3,
+              marginBottom: 3,
+              marginRight: 15
+            }}
+          >
+            <View
+              style={
+                this.props.isFirst
+                  ? styles.first_message
+                  : styles.second_message
+              }
+            >
+              <RecordingCheck
+                audioFileName={audioFileName}
+              />
+            </View>
+          </View>
+        );
+      } else if (isPlayback) {
         return (
           <View
             style={{
@@ -77,9 +104,7 @@ export default class ServiceMesseage extends Component {
               }
             >
               <Playback
-                playbackFileName={
-                  playbackFileName
-                }
+                audioFileName={audioFileName}
               />
             </View>
           </View>
