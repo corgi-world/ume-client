@@ -3,6 +3,7 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import Index from "../screens/Index";
 import Chat from "../screens/Chat";
+import Meditation from "../screens/Meditation";
 
 const MainStackNavigator = createStackNavigator(
   {
@@ -24,6 +25,14 @@ const MainStackNavigator = createStackNavigator(
           },
           headerTintColor: "black",
           headerTitle: ""
+        };
+      }
+    },
+    meditation: {
+      screen: Meditation,
+      navigationOptions: ({ navigation }) => {
+        return {
+          header: null
         };
       }
     }

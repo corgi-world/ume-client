@@ -26,6 +26,8 @@ export default class Chat extends Component {
     super(props);
 
     this.script = CommonScript;
+
+    this.meditationText = null;
     this.audioFileName = null;
 
     this.followEnum = {
@@ -229,6 +231,19 @@ export default class Chat extends Component {
 
       if (nextLevel == 7) {
         focusedIndex = 1;
+        this.meditationText = this.script.MessageScript[
+          nextLevel
+        ][focusedIndex];
+      } else if (nextLevel == 11) {
+        console.log(this.audioFileName);
+        this.props.navigation.navigate(
+          "meditation",
+          {
+            audioFileName: this.audioFileName,
+            text: this.meditationText
+          }
+        );
+        return;
       }
     }
 
