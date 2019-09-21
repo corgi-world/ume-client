@@ -14,6 +14,8 @@ import * as FileSystem from "expo-file-system";
 import * as Font from "expo-font";
 import * as Permissions from "expo-permissions";
 
+import uuidv1 from "uuid/v1";
+
 class Icon {
   constructor(module, width, height) {
     this.module = module;
@@ -236,9 +238,11 @@ export default class Recording extends React.Component {
     const data = new FormData();
     const cleanFile = file.replace("file://", "");
 
+    const fileName = uuidv1();
+    /*
     const fileName = this._toDateString(
       new Date()
-    );
+    );*/
 
     let extString = ".caf";
 

@@ -5,10 +5,12 @@ import Index from "../screens/Index";
 import Chat from "../screens/Chat";
 import Meditation from "../screens/Meditation";
 
+import Sample from "../screens/Sample";
+
 const MainStackNavigator = createStackNavigator(
   {
-    index: {
-      screen: Index,
+    sample: {
+      screen: Sample,
       navigationOptions: ({ navigation }) => {
         return {
           header: null

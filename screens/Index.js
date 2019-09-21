@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import {
   View,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Image,
+  ImageBackground
 } from "react-native";
 
 export default class Index extends Component {
@@ -12,7 +14,7 @@ export default class Index extends Component {
   }
 
   componentDidMount() {
-    this.props.navigation.navigate("chat");
+    // this.props.navigation.navigate("chat");
   }
 
   render() {
@@ -24,6 +26,13 @@ export default class Index extends Component {
           alignItems: "center"
         }}
       >
+        <Image
+          source={require("../assets/corgi.gif")}
+          style={{
+            width: "100%"
+          }}
+          resizeMode={"contain"}
+        ></Image>
         <TouchableOpacity
           onPress={() => {
             this.props.navigation.navigate(
