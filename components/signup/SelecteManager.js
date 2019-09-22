@@ -11,40 +11,11 @@ import SelecteItem from "./SelecteItem";
 export default class SelecteManager extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      helpless: [],
-      unlovable: [],
-      worthless: []
-    };
-
-    this.helplessTexts = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      length: 5
-    };
-    this.helplessTexts[0].push("Incompetent");
-    this.helplessTexts[0].push("Ineffective");
-    this.helplessTexts[0].push(
-      "I can’t do anything right"
-    );
-    this.helplessTexts[1].push("Helpless");
-    this.helplessTexts[1].push("Powerless");
-    this.helplessTexts[1].push("Weak");
-    this.helplessTexts[1].push("Victim");
-    this.helplessTexts[2].push("Needy");
-    this.helplessTexts[2].push("Trapped");
-    this.helplessTexts[2].push("Out of control");
-    this.helplessTexts[2].push("Failure");
-    this.helplessTexts[3].push("Defective");
-    this.helplessTexts[3].push("Not good enough");
-    this.helplessTexts[3].push("Loser");
+    this.state = {};
   }
 
   _onPress(text) {
-    console.log(text);
+    this.props._onPress(text);
   }
 
   _makeItem(text) {
@@ -52,25 +23,23 @@ export default class SelecteManager extends Component {
       <SelecteItem
         key={text}
         text={text}
-        _onPress={this._onPress}
+        _onPress={this._onPress.bind(this)}
       />
     );
   }
   render() {
+    const { title, texts } = this.props;
+
     let items = [];
-    for (
-      var i = 0;
-      i < this.helplessTexts.length;
-      i++
-    ) {
+    for (var i = 0; i < texts.length; i++) {
       items.push(
         <View
           key={"helpless" + i}
           style={styles.containerRow}
         >
-          {Object.values(
-            this.helplessTexts[i]
-          ).map(text => this._makeItem(text))}
+          {Object.values(texts[i]).map(text =>
+            this._makeItem(text)
+          )}
         </View>
       );
     }
@@ -79,8 +48,13 @@ export default class SelecteManager extends Component {
       <View>
         <View style={styles.container}>
           <View style={{ marginBottom: 10 }}>
-            <Text style={{ fontSize: 20 }}>
-              Feeling Helpless
+            <Text
+              style={{
+                fontSize: 22,
+                fontWeight: "400"
+              }}
+            >
+              {title}
             </Text>
           </View>
           {items}

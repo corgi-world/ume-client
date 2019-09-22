@@ -34,7 +34,9 @@ export default class SelecteItem extends Component {
             this.setState({
               isPressed: !isPressed
             });
-            this.props._onPress(text);
+            if (!isPressed) {
+              this.props._onPress(text);
+            }
           }}
         >
           <Text

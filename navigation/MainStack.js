@@ -5,12 +5,21 @@ import Index from "../screens/Index";
 import Chat from "../screens/Chat";
 import Meditation from "../screens/Meditation";
 
-import Sample from "../screens/Sample";
+import SelectBeliefs from "../screens/SelectBeliefs";
+import SelectedBeliefs from "../screens/SelectedBeliefs";
 
 const MainStackNavigator = createStackNavigator(
   {
-    sample: {
-      screen: Sample,
+    selectBeliefs: {
+      screen: SelectBeliefs,
+      navigationOptions: ({ navigation }) => {
+        return {
+          header: null
+        };
+      }
+    },
+    selectedBeliefs: {
+      screen: SelectedBeliefs,
       navigationOptions: ({ navigation }) => {
         return {
           header: null

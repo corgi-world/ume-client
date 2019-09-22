@@ -8,13 +8,31 @@ import {
   StyleSheet
 } from "react-native";
 
+import Beliefs from "../scripts/Beliefs";
+
 import SelecteManager from "../components/signup/SelecteManager";
 
-export default class Sample extends Component {
+export default class SelectBeliefs extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      selected: []
+    };
+
+    Beliefs.init();
+  }
+
+  _onPress(text) {
+    let selected = this.state.selected;
+    let b = selected.includes(text);
+    if (!b) {
+      selected.push(text);
+
+      this.setState({
+        selected
+      });
+    }
   }
 
   render() {
@@ -42,23 +60,49 @@ export default class Sample extends Component {
         <View style={{ flex: 12 }}>
           <ScrollView>
             <ScrollView horizontal={true}>
-              <SelecteManager />
+              <SelecteManager
+                title={"Feeling Helpless"}
+                texts={Beliefs.helpless}
+                _onPress={this._onPress.bind(
+                  this
+                )}
+              />
             </ScrollView>
             <ScrollView horizontal={true}>
-              <SelecteManager />
+              <SelecteManager
+                title={"Feeling Unlovable"}
+                texts={Beliefs.unlovable}
+                _onPress={this._onPress.bind(
+                  this
+                )}
+              />
             </ScrollView>
             <ScrollView horizontal={true}>
-              <SelecteManager />
+              <SelecteManager
+                title={"Feeling Worthless"}
+                texts={Beliefs.worthless}
+                _onPress={this._onPress.bind(
+                  this
+                )}
+              />
             </ScrollView>
           </ScrollView>
         </View>
         <View
           style={{
             flex: 1,
-            backgroundColor: "pink"
+            borderTopWidth: 0.5
           }}
         >
           <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate(
+                "selectedBeliefs",
+                {
+                  selected: this.state.selected
+                }
+              );
+            }}
             style={{
               flex: 1,
               justifyContent: "center",
