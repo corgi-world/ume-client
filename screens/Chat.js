@@ -52,6 +52,7 @@ export default class Chat extends Component {
       follow: this.followEnum.none,
       mode: this.modeEnum.text,
       level: 0,
+      waitingText: "잠시만 기다려주세요!",
 
       messages: {}
     };
@@ -198,6 +199,7 @@ export default class Chat extends Component {
     let nextFollow = follow;
     let nextMode = mode;
     let nextLevel = level;
+    let nextWaitingText = "";
 
     if (follow == this.followEnum.main) {
       if (level == 0) {
@@ -207,30 +209,37 @@ export default class Chat extends Component {
       } else if (level == 2) {
         nextMode = this.modeEnum.text;
       } else if (level == 3) {
-        nextMode = this.modeEnum.button;
+        nextMode = this.modeEnum.text;
       } else if (level == 4) {
         nextMode = this.modeEnum.button;
       } else if (level == 5) {
-        nextMode = this.modeEnum.button;
+        nextMode = this.modeEnum.text;
       } else if (level == 6) {
         nextMode = this.modeEnum.button;
       } else if (level == 7) {
         nextMode = this.modeEnum.button;
       } else if (level == 8) {
-        nextMode = this.modeEnum.button;
+        nextMode = this.modeEnum.text;
       } else if (level == 9) {
         nextMode = this.modeEnum.button;
       } else if (level == 10) {
         nextMode = this.modeEnum.button;
       } else if (level == 11) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 12) {
         nextMode = this.modeEnum.record;
+      } else if (level == 13) {
+        nextMode = this.modeEnum.text;
+      } else if (level == 14) {
+        nextMode = this.modeEnum.button;
       }
     }
 
     this.setState({
       follow: nextFollow,
       mode: nextMode,
-      level: nextLevel
+      level: nextLevel,
+      waitingText: nextWaitingText
     });
   };
 
@@ -250,11 +259,11 @@ export default class Chat extends Component {
       nextLevel = level + 1;
 
       if (this.script === WorkplaceScript) {
-        if (nextLevel == 5) {
-          focusedIndex = 2;
-        } else if (nextLevel == 11) {
-          focusedIndex = 2;
-        } else if (nextLevel == 13) {
+        if (nextLevel == 6) {
+          // focusedIndex = 2;
+        } else if (nextLevel == 12) {
+          // focusedIndex = 2;
+        } else if (nextLevel == 15) {
           console.log(this.audioFileName);
           this.props.navigation.navigate(
             "meditation",
@@ -309,14 +318,15 @@ export default class Chat extends Component {
       nextMode = this.modeEnum.wait;
       nextLevel = level + 1;
       if (level == 2) {
-        if (
-          text === "A" ||
-          text === "a" ||
-          text === "ㅁ"
-        ) {
-          this.script = RelationsScript;
-        } else {
+        let b = text.includes("직장");
+        if (b) {
           this.script = WorkplaceScript;
+          this.meditationText = this.script.MessageScript[12][2];
+          console.log(this.meditationText);
+        } else {
+          this.script = RelationsScript;
+          this.meditationText =
+            WorkplaceScript.MessageScript[12][2];
         }
       }
     }
@@ -338,7 +348,7 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     if (follow == this.followEnum.main) {
-      if (level == 11) {
+      if (level == 12) {
         nextMode = this.modeEnum.wait;
         nextLevel = level + 1;
       }
@@ -420,7 +430,12 @@ export default class Chat extends Component {
   }
 
   _makeInput() {
-    const { follow, mode, level } = this.state;
+    const {
+      follow,
+      mode,
+      level,
+      waitingText
+    } = this.state;
 
     if (follow == this.followEnum.none) {
       return <View />;
@@ -433,6 +448,7 @@ export default class Chat extends Component {
         <Waiting
           script={this.script.ButtonScript[level]}
           level={level}
+          waitingText={waitingText}
           _scrollToEnd={this._scrollToEnd}
         />
       );

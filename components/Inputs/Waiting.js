@@ -30,7 +30,7 @@ export default class Waiting extends Component {
             fontSize: 16
           }}
         >
-          잠시만 기다려주세요!
+          {this.props.waitingText}
         </Text>
       </View>
     );

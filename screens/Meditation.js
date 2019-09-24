@@ -421,7 +421,7 @@ export default class Meditation extends React.Component {
           }}
         >
           <ImageBackground
-            source={require("../assets/images/back.jpg")}
+            source={require("../assets/images/back2.png")}
             style={{
               width: "100%",
               height: "100%"
