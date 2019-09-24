@@ -23,19 +23,21 @@ export default class MessageManager extends Component {
   }
 
   componentDidMount() {
-    const isComplete = this.props.isComplete;
-    const {
+    let {
+      isComplete,
       type,
       texts,
       delays,
       isPlayback,
       isRecordingCheck,
-      audioFileName
+      audioFileName,
+      gifIndex
     } = this.props;
-    const length = texts.length;
 
+    let objects = {};
+
+    const length = texts.length;
     if (isComplete) {
-      let objects = {};
       for (var i = 0; i < length; i++) {
         let id = uuidv1();
         let isFirst = i === 0;
@@ -49,7 +51,8 @@ export default class MessageManager extends Component {
           delay: 0,
           isPlayback,
           isRecordingCheck,
-          audioFileName
+          audioFileName,
+          gifIndex
         };
 
         objects[id] = object;
@@ -68,7 +71,8 @@ export default class MessageManager extends Component {
         delay: delays[0],
         isPlayback,
         isRecordingCheck,
-        audioFileName
+        audioFileName,
+        gifIndex
       };
       objects[id] = object;
       this.setState({ messages: objects });
@@ -86,8 +90,10 @@ export default class MessageManager extends Component {
       id,
       type,
       texts,
-      delays
+      delays,
+      gifIndex
     } = this.props;
+
     const length = texts.length;
     let level = index + 1;
 
@@ -101,7 +107,8 @@ export default class MessageManager extends Component {
           isWait: true,
           isFirst: false,
           text: texts[level],
-          delay: delays[level]
+          delay: delays[level],
+          gifIndex
         }
       };
 
@@ -150,6 +157,10 @@ export default class MessageManager extends Component {
                   }
                   _isFocused={
                     this.props.focusedIndex ==
+                    message.index
+                  }
+                  _isGif={
+                    this.props.gifIndex ==
                     message.index
                   }
                 />

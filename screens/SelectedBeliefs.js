@@ -58,7 +58,6 @@ export default class SelectedBeliefs extends Component {
         </View>
       );
     }
-    console.log(items);
 
     return (
       <SafeAreaView

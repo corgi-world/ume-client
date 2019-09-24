@@ -6,7 +6,11 @@ import {
   Dimensions
 } from "react-native";
 
-const { width, height } = this.props;
+import Gifs from "../../utility/Gifs";
+
+const { width, height } = Dimensions.get(
+  "window"
+);
 
 export default class _GIF extends Component {
   constructor(props) {
@@ -20,11 +24,19 @@ export default class _GIF extends Component {
     return (
       <View
         style={{
-          maxWidth: width - 150,
-          maxHeight: 150
+          width: width - 150,
+          height: 225,
+          justifyContent: "center"
         }}
       >
-        <Text> _GIF </Text>
+        <Image
+          source={Gifs[gifFileName]}
+          style={{
+            width: "100%",
+            height: "100%"
+          }}
+          resizeMode={"contain"}
+        ></Image>
       </View>
     );
   }

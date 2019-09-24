@@ -23,6 +23,10 @@ export default class SelectBeliefs extends Component {
     Beliefs.init();
   }
 
+  componentDidMount() {
+    // this.props.navigation.navigate("chat");
+  }
+
   _onPress(text) {
     let selected = this.state.selected;
     let b = selected.includes(text);

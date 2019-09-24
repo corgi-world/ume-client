@@ -15,6 +15,8 @@ import TypingAnimation from "./Typing";
 import Playback from "./Playback";
 import RecordingCheck from "./RecordingCheck";
 
+import _Gif from "./_GIF";
+
 export default class ServiceMesseage extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +53,16 @@ export default class ServiceMesseage extends Component {
 
   render() {
     const { isWait } = this.state;
-    const { _isFocused } = this.props;
+    const {
+      _isFocused,
+      _isGif,
+      text
+    } = this.props;
+
+    let gifFileName = "";
+    if (_isGif) {
+      gifFileName = text.split("**").join("");
+    }
 
     if (isWait) {
       return (
@@ -66,45 +77,60 @@ export default class ServiceMesseage extends Component {
         </View>
       );
     } else {
-      return (
-        <View
-          style={{
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-            flexDirection: "row",
-            marginTop: 3,
-            marginBottom: 3,
-            marginLeft: 16
-          }}
-        >
-          <View
-            style={
-              this.props.isFirst
-                ? styles.first_message
-                : styles.second_message
-            }
-          >
-            <Text
-              style={[
-                {
-                  fontSize: 16,
-                  padding: 10
-                },
-                _isFocused
-                  ? { fontWeight: "600" }
-                  : {}
-              ]}
+      if (_isGif) {
+        return (
+          <View style={styles.box}>
+            <View
+              style={
+                this.props.isFirst
+                  ? styles.first_message
+                  : styles.second_message
+              }
             >
-              {this.props.text}
-            </Text>
+              <_Gif gifFileName={gifFileName} />
+            </View>
           </View>
-        </View>
-      );
+        );
+      } else {
+        return (
+          <View style={styles.box}>
+            <View
+              style={
+                this.props.isFirst
+                  ? styles.first_message
+                  : styles.second_message
+              }
+            >
+              <Text
+                style={[
+                  {
+                    fontSize: 16,
+                    padding: 10
+                  },
+                  _isFocused
+                    ? { fontWeight: "600" }
+                    : {}
+                ]}
+              >
+                {this.props.text}
+              </Text>
+            </View>
+          </View>
+        );
+      }
     }
   }
 }
 
 const styles = StyleSheet.create({
+  box: {
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    marginTop: 3,
+    marginBottom: 3,
+    marginLeft: 16
+  },
   first_message: {
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,

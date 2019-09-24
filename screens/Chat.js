@@ -76,8 +76,12 @@ export default class Chat extends Component {
     for (var i = 0; i < script.length; i++) {
       let text = script[i];
       let isGif = text.includes("**");
-      console.log(isGif);
+      if (isGif) {
+        return i;
+      }
     }
+
+    return null;
   }
 
   componentDidMount() {
@@ -90,7 +94,7 @@ export default class Chat extends Component {
       this._keyboardDidHide.bind(this)
     );
 
-    this._checkGifIndex(
+    let gifIndex = this._checkGifIndex(
       this.script.MessageScript[0]
     );
 
@@ -101,7 +105,8 @@ export default class Chat extends Component {
         type: this.messageTypeEnum.service,
         isComplete: false,
         texts: this.script.MessageScript[0],
-        delays: this.script.Delay[0]
+        delays: this.script.Delay[0],
+        gifIndex
       }
     };
 
@@ -175,6 +180,7 @@ export default class Chat extends Component {
                   audioFileName={
                     message.audioFileName
                   }
+                  gifIndex={message.gifIndex}
                 />
               );
             })}
