@@ -24,7 +24,7 @@ export default class SelectBeliefs extends Component {
   }
 
   componentDidMount() {
-    // this.props.navigation.navigate("chat");
+    this.props.navigation.navigate("chat");
   }
 
   _onPress(text) {

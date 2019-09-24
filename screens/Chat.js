@@ -203,9 +203,9 @@ export default class Chat extends Component {
       if (level == 0) {
         nextMode = this.modeEnum.button;
       } else if (level == 1) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 2) {
         nextMode = this.modeEnum.button;
+      } else if (level == 2) {
+        nextMode = this.modeEnum.text;
       } else if (level == 3) {
         nextMode = this.modeEnum.button;
       } else if (level == 4) {
@@ -215,13 +215,15 @@ export default class Chat extends Component {
       } else if (level == 6) {
         nextMode = this.modeEnum.button;
       } else if (level == 7) {
-        nextMode = this.modeEnum.record;
+        nextMode = this.modeEnum.button;
       } else if (level == 8) {
-        nextMode = this.modeEnum.text;
+        nextMode = this.modeEnum.button;
       } else if (level == 9) {
         nextMode = this.modeEnum.button;
       } else if (level == 10) {
         nextMode = this.modeEnum.button;
+      } else if (level == 11) {
+        nextMode = this.modeEnum.record;
       }
     }
 
@@ -247,12 +249,32 @@ export default class Chat extends Component {
       nextMode = this.modeEnum.wait;
       nextLevel = level + 1;
 
+      if (this.script === WorkplaceScript) {
+        if (nextLevel == 5) {
+          focusedIndex = 2;
+        } else if (nextLevel == 11) {
+          focusedIndex = 2;
+        } else if (nextLevel == 13) {
+          console.log(this.audioFileName);
+          this.props.navigation.navigate(
+            "meditation",
+            {
+              audioFileName: this.audioFileName,
+              text: this.meditationText
+            }
+          );
+          return;
+        }
+      } else {
+      }
+      /*
       if (nextLevel == 7) {
         focusedIndex = 1;
         this.meditationText = this.script.MessageScript[
           nextLevel
         ][focusedIndex];
       } else if (nextLevel == 11) {
+
         console.log(this.audioFileName);
         this.props.navigation.navigate(
           "meditation",
@@ -262,7 +284,7 @@ export default class Chat extends Component {
           }
         );
         return;
-      }
+      }*/
     }
 
     this._makeMessages(
@@ -286,7 +308,7 @@ export default class Chat extends Component {
     if (follow == this.followEnum.main) {
       nextMode = this.modeEnum.wait;
       nextLevel = level + 1;
-      if (level == 1) {
+      if (level == 2) {
         if (
           text === "A" ||
           text === "a" ||
@@ -316,7 +338,7 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     if (follow == this.followEnum.main) {
-      if (level == 7) {
+      if (level == 11) {
         nextMode = this.modeEnum.wait;
         nextLevel = level + 1;
       }
@@ -358,6 +380,10 @@ export default class Chat extends Component {
       }
     };
 
+    let gifIndex = this._checkGifIndex(
+      this.script.MessageScript[nextLevel]
+    );
+
     const serviceMessageId = uuidv1();
     const serviceObject = {
       [serviceMessageId]: {
@@ -371,7 +397,8 @@ export default class Chat extends Component {
         isRecordingCheck,
         isPlayback,
         audioFileName,
-        focusedIndex
+        focusedIndex,
+        gifIndex
       }
     };
 

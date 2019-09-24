@@ -18,22 +18,39 @@ export default class _GIF extends Component {
     this.state = {};
   }
 
+  _calSize(org_width, org_height) {
+    img_height = 0;
+    ratio = org_width / 205;
+    img_height = org_height / ratio;
+
+    return img_height;
+  }
+
   render() {
     const { gifFileName } = this.props;
+    const obj = Gifs[gifFileName];
+    const org_width = obj.width;
+    const org_height = obj.height;
+    const img_width = 205;
+    const img_height = this._calSize(
+      org_width,
+      org_height
+    );
 
     return (
       <View
         style={{
           width: width - 150,
-          height: 225,
-          justifyContent: "center"
+          height: img_height + 20,
+          justifyContent: "center",
+          alignItems: "center"
         }}
       >
         <Image
-          source={Gifs[gifFileName]}
+          source={obj.file}
           style={{
-            width: "100%",
-            height: "100%"
+            width: img_width,
+            height: img_height
           }}
           resizeMode={"contain"}
         ></Image>
