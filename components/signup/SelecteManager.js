@@ -34,7 +34,7 @@ export default class SelecteManager extends Component {
     for (var i = 0; i < texts.length; i++) {
       items.push(
         <View
-          key={"helpless" + i}
+          key={title + " " + i}
           style={styles.containerRow}
         >
           {Object.values(texts[i]).map(text =>

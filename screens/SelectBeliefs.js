@@ -58,8 +58,15 @@ export default class SelectBeliefs extends Component {
           </Text>
         </View>
         <View style={{ flex: 12 }}>
-          <ScrollView>
-            <ScrollView horizontal={true}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+          >
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={
+                false
+              }
+            >
               <SelecteManager
                 title={"Feeling Helpless"}
                 texts={Beliefs.helpless}
@@ -68,7 +75,12 @@ export default class SelectBeliefs extends Component {
                 )}
               />
             </ScrollView>
-            <ScrollView horizontal={true}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={
+                false
+              }
+            >
               <SelecteManager
                 title={"Feeling Unlovable"}
                 texts={Beliefs.unlovable}
@@ -77,7 +89,12 @@ export default class SelectBeliefs extends Component {
                 )}
               />
             </ScrollView>
-            <ScrollView horizontal={true}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={
+                false
+              }
+            >
               <SelecteManager
                 title={"Feeling Worthless"}
                 texts={Beliefs.worthless}

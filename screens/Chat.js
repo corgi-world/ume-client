@@ -72,6 +72,14 @@ export default class Chat extends Component {
     this._scrollToEnd();
   }
 
+  _checkGifIndex(script) {
+    for (var i = 0; i < script.length; i++) {
+      let text = script[i];
+      let isGif = text.includes("**");
+      console.log(isGif);
+    }
+  }
+
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -80,6 +88,10 @@ export default class Chat extends Component {
     this.keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       this._keyboardDidHide.bind(this)
+    );
+
+    this._checkGifIndex(
+      this.script.MessageScript[0]
     );
 
     const serviceMessageId = uuidv1();

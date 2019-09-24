@@ -15,8 +15,7 @@ export default beliefs = {
   worthless: {
     0: [],
     1: [],
-    2: [],
-    length: 3
+    length: 2
   },
 
   init: function() {
@@ -55,11 +54,11 @@ export default beliefs = {
     this.worthless[0].push("Worthless");
     this.worthless[0].push("Unacceptable");
     this.worthless[0].push("Bad");
-    this.worthless[1].push("Waste");
+    this.worthless[0].push("Waste");
     this.worthless[1].push("Immoral");
     this.worthless[1].push("Toxic");
     this.worthless[1].push("Evil");
-    this.worthless[2].push(
+    this.worthless[1].push(
       "i don’t deserve to live"
     );
   }
