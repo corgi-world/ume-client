@@ -39,7 +39,7 @@ export default class Buttons extends Component {
                 alignItems: "center",
                 justifyContent: "center",
                 paddingVertical: 10,
-                borderTopWidth: 0.2
+                borderTopWidth: 0.5
               }}
               onPress={() => {
                 this.props._pushedInputBlock(

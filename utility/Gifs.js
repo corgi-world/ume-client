@@ -35,5 +35,10 @@ export default {
     file: require("../assets/gifs/6.gif"),
     width: 130,
     height: 93
+  },
+  7: {
+    file: require("../assets/gifs/7.gif"),
+    width: 480,
+    height: 266
   }
 };

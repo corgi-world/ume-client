@@ -4,8 +4,7 @@ import {
   SafeAreaView,
   ScrollView,
   Keyboard,
-  Text,
-  AsyncStorage
+  Text
 } from "react-native";
 
 import uuidv1 from "uuid/v1";
@@ -74,22 +73,6 @@ export default class Chat extends Component {
     this._scrollToEnd();
   }
 
-  _setScriptsUserName(name) {
-    let script1 = CommonScript.MessageScript;
-    for (var i = 0; i < script1.length; i++) {
-      for (
-        var j = 0;
-        j < script1[i].length;
-        j++
-      ) {
-        const s = script1[i][j]
-          .split("@@")
-          .join(name);
-        script1[i][j] = s;
-      }
-    }
-  }
-
   _checkGifIndex(script) {
     for (var i = 0; i < script.length; i++) {
       let text = script[i];
@@ -102,7 +85,7 @@ export default class Chat extends Component {
     return null;
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       this._keyboardDidShow.bind(this)
@@ -111,11 +94,6 @@ export default class Chat extends Component {
       "keyboardDidHide",
       this._keyboardDidHide.bind(this)
     );
-
-    const name = await AsyncStorage.getItem(
-      "name"
-    );
-    this._setScriptsUserName(name);
 
     let gifIndex = this._checkGifIndex(
       this.script.MessageScript[0]

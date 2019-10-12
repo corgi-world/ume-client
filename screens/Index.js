@@ -1,48 +1,50 @@
 import React, { Component } from "react";
 import {
   View,
-  Text,
+  TextInput,
+  StyleSheet,
+  Dimensions,
   TouchableOpacity,
-  Image,
-  ImageBackground
+  Text,
+  AsyncStorage
 } from "react-native";
+
+const { width, height } = Dimensions.get(
+  "window"
+);
 
 export default class Index extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      name: ""
+    };
   }
 
-  componentDidMount() {
-    // this.props.navigation.navigate("chat");
-  }
+  async componentDidMount() {
+    // await AsyncStorage.clear();
 
+    var name = await AsyncStorage.getItem("name");
+    name = name === null ? false : name;
+
+    if (name) {
+      this.props.navigation.navigate("chat");
+    } else {
+      this.props.navigation.navigate("login");
+    }
+  }
   render() {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
-        <Image
-          source={require("../assets/corgi.gif")}
-          style={{
-            width: "100%"
-          }}
-          resizeMode={"contain"}
-        ></Image>
-        <TouchableOpacity
-          onPress={() => {
-            this.props.navigation.navigate(
-              "chat"
-            );
-          }}
-        >
-          <Text>Hello</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    return <View></View>;
   }
 }
+
+const styles = StyleSheet.create({
+  _textInput: {
+    width: width - 100,
+    fontSize: 15,
+    padding: 10,
+    borderWidth: 0.5,
+    borderColor: "#bebebe",
+    borderRadius: 10
+  }
+});

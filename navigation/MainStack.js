@@ -2,6 +2,8 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 
 import Index from "../screens/Index";
+import Login from "../screens/Login";
+
 import Chat from "../screens/Chat";
 import Meditation from "../screens/Meditation";
 
@@ -10,6 +12,22 @@ import SelectedBeliefs from "../screens/SelectedBeliefs";
 
 const MainStackNavigator = createStackNavigator(
   {
+    index: {
+      screen: Index,
+      navigationOptions: ({ navigation }) => {
+        return {
+          header: null
+        };
+      }
+    },
+    login: {
+      screen: Login,
+      navigationOptions: ({ navigation }) => {
+        return {
+          header: null
+        };
+      }
+    },
     selectBeliefs: {
       screen: SelectBeliefs,
       navigationOptions: ({ navigation }) => {
