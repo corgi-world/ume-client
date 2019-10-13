@@ -17,6 +17,8 @@ export default class Waiting extends Component {
     const { script, level } = this.props;
     const height = script.length * 39;
 
+    console.log(this.props.waitingText);
+
     return (
       <View
         style={{

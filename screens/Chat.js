@@ -53,7 +53,7 @@ export default class Chat extends Component {
       follow: this.followEnum.none,
       mode: this.modeEnum.text,
       level: 0,
-      waitingText: "잠시만 기다려주세요!",
+      waitingText: "",
 
       messages: {}
     };
@@ -72,6 +72,18 @@ export default class Chat extends Component {
   }
   _keyboardDidHide() {
     this._scrollToEnd();
+  }
+
+  _changeScriptText(script, mark, newText) {
+    for (var i = 0; i < script.length; i++) {
+      for (var j = 0; j < script[i].length; j++) {
+        const s = script[i][j]
+          .split(mark)
+          .join(newText);
+
+        script[i][j] = s;
+      }
+    }
   }
 
   _setScriptsUserName(name) {
@@ -115,7 +127,11 @@ export default class Chat extends Component {
     const name = await AsyncStorage.getItem(
       "name"
     );
-    this._setScriptsUserName(name);
+    this._changeScriptText(
+      CommonScript.MessageScript,
+      "@@",
+      name
+    );
 
     let gifIndex = this._checkGifIndex(
       this.script.MessageScript[0]
@@ -227,33 +243,25 @@ export default class Chat extends Component {
       if (level == 0) {
         nextMode = this.modeEnum.button;
       } else if (level == 1) {
-        nextMode = this.modeEnum.button;
+        nextMode = this.modeEnum.text;
       } else if (level == 2) {
-        nextMode = this.modeEnum.text;
+        nextMode = this.modeEnum.button;
       } else if (level == 3) {
-        nextMode = this.modeEnum.text;
+        nextMode = this.modeEnum.button;
       } else if (level == 4) {
         nextMode = this.modeEnum.button;
       } else if (level == 5) {
-        nextMode = this.modeEnum.text;
+        nextMode = this.modeEnum.button;
       } else if (level == 6) {
         nextMode = this.modeEnum.button;
       } else if (level == 7) {
         nextMode = this.modeEnum.button;
       } else if (level == 8) {
-        nextMode = this.modeEnum.text;
+        nextMode = this.modeEnum.button;
       } else if (level == 9) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 10) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 11) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 12) {
-        nextMode = this.modeEnum.record;
-      } else if (level == 13) {
         nextMode = this.modeEnum.text;
-      } else if (level == 14) {
-        nextMode = this.modeEnum.button;
+      } else if (level == 10) {
+        nextMode = this.modeEnum.text;
       }
     }
 
@@ -280,32 +288,17 @@ export default class Chat extends Component {
       nextMode = this.modeEnum.wait;
       nextLevel = level + 1;
 
-      if (this.script === WorkplaceScript) {
-        if (nextLevel == 6) {
-          // focusedIndex = 2;
-        } else if (nextLevel == 12) {
-          // focusedIndex = 2;
-        } else if (nextLevel == 15) {
-          console.log(this.audioFileName);
-          this.props.navigation.navigate(
-            "meditation",
-            {
-              audioFileName: this.audioFileName,
-              text: this.meditationText
-            }
-          );
-          return;
-        }
-      } else {
+      if (level == 8) {
+        let feel =
+          CommonScript.ButtonScript[text];
+        this._changeScriptText(
+          CommonScript.MessageScript,
+          "##",
+          feel
+        );
       }
-      /*
-      if (nextLevel == 7) {
-        focusedIndex = 1;
-        this.meditationText = this.script.MessageScript[
-          nextLevel
-        ][focusedIndex];
-      } else if (nextLevel == 11) {
 
+      if (nextLevel == 100) {
         console.log(this.audioFileName);
         this.props.navigation.navigate(
           "meditation",
@@ -315,7 +308,7 @@ export default class Chat extends Component {
           }
         );
         return;
-      }*/
+      }
     }
 
     this._makeMessages(
@@ -339,7 +332,7 @@ export default class Chat extends Component {
     if (follow == this.followEnum.main) {
       nextMode = this.modeEnum.wait;
       nextLevel = level + 1;
-      if (level == 2) {
+      if (level == 100) {
         let b = text.includes("직장");
         if (b) {
           this.script = WorkplaceScript;
