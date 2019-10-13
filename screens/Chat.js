@@ -74,30 +74,38 @@ export default class Chat extends Component {
     this._scrollToEnd();
   }
 
-  _changeScriptText(script, mark, newText) {
-    for (var i = 0; i < script.length; i++) {
-      for (var j = 0; j < script[i].length; j++) {
-        const s = script[i][j]
-          .split(mark)
-          .join(newText);
-
-        script[i][j] = s;
-      }
-    }
-  }
-
-  _setScriptsUserName(name) {
+  _changeScriptsText(mark, newText) {
     let script1 = CommonScript.MessageScript;
-    for (var i = 0; i < script1.length; i++) {
+    let startIndex1 = script1.startIndex;
+    let length1 =
+      script1.startIndex + script1.length;
+    for (var i = startIndex1; i < length1; i++) {
       for (
         var j = 0;
         j < script1[i].length;
         j++
       ) {
         const s = script1[i][j]
-          .split("@@")
-          .join(name);
+          .split(mark)
+          .join(newText);
         script1[i][j] = s;
+      }
+    }
+
+    let script2 = WorkplaceScript.MessageScript;
+    let startIndex2 = script2.startIndex;
+    let length2 =
+      script2.startIndex + script2.length;
+    for (var i = startIndex2; i < length2; i++) {
+      for (
+        var j = 0;
+        j < script2[i].length;
+        j++
+      ) {
+        const s = script2[i][j]
+          .split(mark)
+          .join(newText);
+        script2[i][j] = s;
       }
     }
   }
@@ -127,11 +135,7 @@ export default class Chat extends Component {
     const name = await AsyncStorage.getItem(
       "name"
     );
-    this._changeScriptText(
-      CommonScript.MessageScript,
-      "@@",
-      name
-    );
+    this._changeScriptsText("@@", name);
 
     let gifIndex = this._checkGifIndex(
       this.script.MessageScript[0]
@@ -262,6 +266,10 @@ export default class Chat extends Component {
         nextMode = this.modeEnum.text;
       } else if (level == 10) {
         nextMode = this.modeEnum.text;
+      } else if (level == 11) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 12) {
+        nextMode = this.modeEnum.button;
       }
     }
 
@@ -291,13 +299,10 @@ export default class Chat extends Component {
       if (level == 8) {
         let feel =
           CommonScript.ButtonScript[text];
-        this._changeScriptText(
-          CommonScript.MessageScript,
-          "##",
-          feel
-        );
+        this._changeScriptsText("##", feel);
       }
 
+      /*
       if (nextLevel == 100) {
         console.log(this.audioFileName);
         this.props.navigation.navigate(
@@ -308,7 +313,7 @@ export default class Chat extends Component {
           }
         );
         return;
-      }
+      }*/
     }
 
     this._makeMessages(
@@ -332,17 +337,23 @@ export default class Chat extends Component {
     if (follow == this.followEnum.main) {
       nextMode = this.modeEnum.wait;
       nextLevel = level + 1;
-      if (level == 100) {
-        let b = text.includes("직장");
-        if (b) {
+      if (level == 9) {
+        let keyword = "";
+        if (text.includes("학업")) {
+          keyword = "학업 스트레스";
           this.script = WorkplaceScript;
-          this.meditationText = this.script.MessageScript[12][2];
-          console.log(this.meditationText);
+        } else if (text.includes("대인")) {
+          keyword = "대인 관계";
+          this.script = WorkplaceScript;
+        } else if (text.includes("취업")) {
+          keyword = "취업 스트레스";
+          this.script = WorkplaceScript;
         } else {
-          this.script = RelationsScript;
-          this.meditationText =
-            WorkplaceScript.MessageScript[12][2];
+          keyword = "직장 스트레스";
+          this.script = WorkplaceScript;
         }
+
+        this._changeScriptsText("$$", keyword);
       }
     }
 
