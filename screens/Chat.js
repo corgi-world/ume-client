@@ -31,6 +31,9 @@ export default class Chat extends Component {
     this.meditationText = null;
     this.audioFileName = null;
 
+    this.meditationTexts = null;
+    this.audioFileNames = null;
+
     this.followEnum = {
       none: 0,
       main: 1
@@ -296,6 +299,18 @@ export default class Chat extends Component {
         nextMode = this.modeEnum.text;
       } else if (level == 25) {
         nextMode = this.modeEnum.button;
+      } else if (level == 26) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 27) {
+        nextMode = this.modeEnum.record;
+      } else if (level == 28) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 29) {
+        nextMode = this.modeEnum.text;
+      } else if (level == 30) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 31) {
+        nextMode = this.modeEnum.button;
       }
     }
 
@@ -328,8 +343,7 @@ export default class Chat extends Component {
         this._changeScriptsText("##", feel);
       }
 
-      /*
-      if (nextLevel == 100) {
+      if (nextLevel == 31) {
         console.log(this.audioFileName);
         this.props.navigation.navigate(
           "meditation",
@@ -339,7 +353,7 @@ export default class Chat extends Component {
           }
         );
         return;
-      }*/
+      }
     }
 
     this._makeMessages(
@@ -383,6 +397,9 @@ export default class Chat extends Component {
       } else if (level == 24) {
         const iam = text;
         this._changeScriptsText("%%", iam);
+      } else if (level == 29) {
+        const value = text;
+        this._changeScriptsText("&&", value);
       }
     }
 
