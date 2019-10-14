@@ -270,6 +270,12 @@ export default class Chat extends Component {
         nextMode = this.modeEnum.button;
       } else if (level == 12) {
         nextMode = this.modeEnum.button;
+      } else if (level == 13) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 14) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 15) {
+        nextMode = this.modeEnum.record;
       }
     }
 
@@ -374,10 +380,8 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     if (follow == this.followEnum.main) {
-      if (level == 12) {
-        nextMode = this.modeEnum.wait;
-        nextLevel = level + 1;
-      }
+      nextMode = this.modeEnum.wait;
+      nextLevel = level + 1;
     }
 
     this._makeMessages(
