@@ -276,6 +276,26 @@ export default class Chat extends Component {
         nextMode = this.modeEnum.button;
       } else if (level == 15) {
         nextMode = this.modeEnum.record;
+      } else if (level == 16) {
+        nextMode = this.modeEnum.text;
+      } else if (level == 17) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 18) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 19) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 20) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 21) {
+        nextMode = this.modeEnum.button;
+      } else if (level == 22) {
+        nextMode = this.modeEnum.record;
+      } else if (level == 23) {
+        nextMode = this.modeEnum.text;
+      } else if (level == 24) {
+        nextMode = this.modeEnum.text;
+      } else if (level == 25) {
+        nextMode = this.modeEnum.button;
       }
     }
 
@@ -360,6 +380,9 @@ export default class Chat extends Component {
         }
 
         this._changeScriptsText("$$", keyword);
+      } else if (level == 24) {
+        const iam = text;
+        this._changeScriptsText("%%", iam);
       }
     }
 
