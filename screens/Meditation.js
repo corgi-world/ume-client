@@ -16,6 +16,8 @@ import { Audio } from "expo-av";
 import * as Font from "expo-font";
 import * as Permissions from "expo-permissions";
 
+const CollectionsList = require("collections/list");
+
 class Icon {
   constructor(module, width, height) {
     this.module = module;
@@ -46,27 +48,6 @@ const ICON_MUTED_BUTTON = new Icon(
   67,
   58
 );
-const ICON_UNMUTED_BUTTON = new Icon(
-  require("../assets/images/unmuted_button.png"),
-  67,
-  58
-);
-
-const ICON_TRACK_1 = new Icon(
-  require("../assets/images/track_1.png"),
-  166,
-  5
-);
-const ICON_THUMB_1 = new Icon(
-  require("../assets/images/thumb_1.png"),
-  18,
-  19
-);
-const ICON_THUMB_2 = new Icon(
-  require("../assets/images/thumb_2.png"),
-  15,
-  19
-);
 
 const {
   width: DEVICE_WIDTH,
@@ -86,6 +67,8 @@ export default class Meditation extends React.Component {
     this.recording = null;
 
     this.bgm = null;
+    this.sounds = new CollectionsList();
+    this.soundIndex = 0;
     this.sound = null;
 
     this.isSeeking = false;
@@ -106,7 +89,7 @@ export default class Meditation extends React.Component {
       volume: 1.0,
       rate: 1.0,
 
-      files: null
+      text: ""
     };
     this.recordingSettings = JSON.parse(
       JSON.stringify(
@@ -117,73 +100,46 @@ export default class Meditation extends React.Component {
     // this.recordingSettings.android['maxFileSize'] = 12000;
   }
 
-  getBGM = async () => {
-    try {
-      const {
-        sound: soundObject,
-        status
-      } = await Audio.Sound.createAsync(
-        require("../assets/bgm.mp3"),
-        {
-          shouldPlay: false,
-          isLooping: false,
-          isMuted: this.state.muted,
-          volume: this.state.volume,
-          rate: this.state.rate,
-          shouldCorrectPitch: this.state
-            .shouldCorrectPitch
-        }
-      );
-
-      this.bgm = soundObject;
-
-      // Your sound is playing!
-    } catch (error) {
-      // An error occurred!
-      console.log(error);
-    }
-
-    return 1;
-  };
   componentDidMount = async () => {
-    await this.getBGM();
-
     const params = this.props.navigation.state
       .params;
-    const audioFileName = params.audioFileName;
-    this._selectedAudioFile(audioFileName);
+    const audioFileNames = params.audioFileNames.toArray();
+    const length = audioFileNames.length;
+
+    this.bgm = await this._selectedAudioFile(
+      "bgm.mp3",
+      true,
+      0.7
+    );
+
+    for (var i = 0; i < length; i++) {
+      const audioFileName = audioFileNames[i];
+      this.sounds.add(
+        await this._selectedAudioFile(
+          audioFileName,
+          false,
+          1,
+          this._updateScreenForSoundStatus
+        )
+      );
+    }
+
+    const array = this.sounds.toArray();
+    this.sound = array[this.soundIndex];
+
+    await this._onPlayPausePressed();
   };
 
-  _selectedAudioFile = async selectedFileName => {
-    if (this.sound != null) {
-      this.sound.stopAsync();
-    }
+  componentWillUnmount = async () => {
+    console.log("unmount");
+  };
 
-    try {
-      const {
-        sound: soundObject,
-        status
-      } = await Audio.Sound.createAsync(
-        require("../assets/bgm.mp3"),
-        {
-          shouldPlay: false,
-          isLooping: false,
-          isMuted: this.state.muted,
-          volume: this.state.volume,
-          rate: this.state.rate,
-          shouldCorrectPitch: this.state
-            .shouldCorrectPitch
-        }
-      );
-
-      this.bgm = soundObject;
-
-      // Your sound is playing!
-    } catch (error) {
-      // An error occurred!
-      console.log(error);
-    }
-
+  _selectedAudioFile = async (
+    selectedFileName,
+    isLooping,
+    volume,
+    update
+  ) => {
     const s =
       ServerURL + "getAudio/" + selectedFileName;
     console.log(s);
@@ -196,21 +152,21 @@ export default class Meditation extends React.Component {
         { uri: s },
         {
           shouldPlay: false,
-          isLooping: false,
+          isLooping: isLooping,
           isMuted: this.state.muted,
           volume: this.state.volume,
           rate: this.state.rate,
           shouldCorrectPitch: this.state
             .shouldCorrectPitch
         },
-        this._updateScreenForSoundStatus
+        update
       );
-
-      this.sound = soundObject;
 
       this.setState({
         isLoading: false
       });
+
+      return soundObject;
       // Your sound is playing!
     } catch (error) {
       // An error occurred!
@@ -228,7 +184,26 @@ export default class Meditation extends React.Component {
     });
   };
 
-  _updateScreenForSoundStatus = status => {
+  _updateScreenForSoundStatus = async status => {
+    if (status.didJustFinish) {
+      const length = this.sounds.length;
+      if (this.soundIndex < length - 1) {
+        this.soundIndex += 1;
+      } else {
+        this.soundIndex = 0;
+      }
+      await this.sound.stopAsync();
+      const array = this.sounds.toArray();
+      this.sound = array[this.soundIndex];
+      await this.sound.playAsync();
+
+      const params = this.props.navigation.state
+        .params;
+      this.setState({
+        text: params.texts[this.soundIndex]
+      });
+    }
+
     if (status.isLoaded) {
       this.setState({
         soundDuration: status.durationMillis,
@@ -257,24 +232,19 @@ export default class Meditation extends React.Component {
   };
 
   _onPlayPausePressed = () => {
-    if (this.sound != null) {
-      if (this.state.isPlaying) {
-        this.sound.pauseAsync();
-      } else {
-        if (this.sound != null) {
-          this.sound.stopAsync();
-        }
-        this.sound.playAsync();
-      }
-    }
     if (this.bgm != null) {
       if (this.state.isPlaying) {
         this.bgm.pauseAsync();
       } else {
-        if (this.bgm != null) {
-          this.bgm.stopAsync();
-        }
         this.bgm.playAsync();
+      }
+    }
+
+    if (this.sound != null) {
+      if (this.state.isPlaying) {
+        this.sound.pauseAsync();
+      } else {
+        this.sound.playAsync();
       }
     }
   };
@@ -413,6 +383,13 @@ export default class Meditation extends React.Component {
   }
 
   render() {
+    const params = this.props.navigation.state
+      .params;
+    let mt = params.texts[0];
+    if (this.state.text !== "") {
+      mt = this.state.text;
+    }
+
     return (
       <View style={{ flex: 1 }}>
         <View
@@ -441,10 +418,7 @@ export default class Meditation extends React.Component {
                   color: "black"
                 }}
               >
-                {
-                  this.props.navigation.state
-                    .params.text
-                }
+                {mt}
               </Text>
             </View>
           </ImageBackground>
@@ -467,35 +441,6 @@ export default class Meditation extends React.Component {
               paddingHorizontal: 10
             }}
           >
-            <Slider
-              style={styles.playbackSlider}
-              trackImage={ICON_TRACK_1.module}
-              thumbImage={ICON_THUMB_1.module}
-              value={this._getSeekSliderPosition()}
-              onValueChange={
-                this._onSeekSliderValueChange
-              }
-              onSlidingComplete={
-                this._onSeekSliderSlidingComplete
-              }
-              disabled={
-                !this.state.isPlaybackAllowed ||
-                this.state.isLoading
-              }
-            />
-            <View
-              style={{
-                alignItems: "flex-end",
-                justifyContent: "flex-end",
-                width: DEVICE_WIDTH,
-                marginRight: 30
-              }}
-            >
-              <Text>
-                {this._getPlaybackTimestamp()}
-              </Text>
-            </View>
-
             <View
               style={{
                 flexDirection: "row",

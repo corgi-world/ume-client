@@ -11,6 +11,8 @@ import {
 import uuidv1 from "uuid/v1";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 
+const CollectionsList = require("collections/list");
+
 import CommonScript from "../scripts/CommonScript";
 import RelationsScript from "../scripts/RelationsScript";
 import WorkplaceScript from "../scripts/WorkplaceScript";
@@ -31,8 +33,8 @@ export default class Chat extends Component {
     this.meditationText = null;
     this.audioFileName = null;
 
-    this.meditationTexts = null;
-    this.audioFileNames = null;
+    this.meditationTexts = new CollectionsList();
+    this.audioFileNames = new CollectionsList();
 
     this.followEnum = {
       none: 0,
@@ -343,13 +345,13 @@ export default class Chat extends Component {
         this._changeScriptsText("##", feel);
       }
 
-      if (nextLevel == 31) {
+      if (level == 31) {
         console.log(this.audioFileName);
         this.props.navigation.navigate(
           "meditation",
           {
-            audioFileName: this.audioFileName,
-            text: this.meditationText
+            audioFileNames: this.audioFileNames,
+            texts: this.meditationTexts.toArray()
           }
         );
         return;
@@ -422,6 +424,20 @@ export default class Chat extends Component {
     if (follow == this.followEnum.main) {
       nextMode = this.modeEnum.wait;
       nextLevel = level + 1;
+
+      this.audioFileNames.add(fileName);
+      if (level == 27) {
+        const ms1 = this.script
+          .MessageScript[15][3];
+        const ms2 = this.script
+          .MessageScript[22][2];
+        const ms3 = this.script
+          .MessageScript[27][2];
+
+        this.meditationTexts.add(ms1);
+        this.meditationTexts.add(ms2);
+        this.meditationTexts.add(ms3);
+      }
     }
 
     this._makeMessages(
