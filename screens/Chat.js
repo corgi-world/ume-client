@@ -152,10 +152,6 @@ export default class Chat extends Component {
       this._keyboardDidHide.bind(this)
     );
 
-    this.props.navigation.navigate(
-      "recording_modal"
-    );
-
     const name = await AsyncStorage.getItem(
       "name"
     );
@@ -382,6 +378,10 @@ export default class Chat extends Component {
 
   _pushedInputBlock = async (index, text) => {
     const { follow, mode, level } = this.state;
+
+    this.props.navigation.navigate(
+      "recording_modal"
+    );
 
     let nextFollow = follow;
     let nextMode = mode;
