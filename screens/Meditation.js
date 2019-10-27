@@ -415,7 +415,8 @@ export default class Meditation extends React.Component {
               <Text
                 style={{
                   fontSize: 20,
-                  color: "black"
+                  color: "black",
+                  textAlign: "center"
                 }}
               >
                 {mt}

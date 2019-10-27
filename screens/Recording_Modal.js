@@ -74,6 +74,7 @@ export default class Recording extends React.Component {
 
   componentDidMount() {
     /*
+    const params = this.props.navigation.state.params;
     setTimeout(() => {
       this.props._scrollToEnd();
     }, 150);*/
@@ -199,7 +200,10 @@ export default class Recording extends React.Component {
     });
 
     if (fileName != null) {
-      this.props._record(fileName);
+      const params = this.props.navigation.state
+        .params;
+      params._record(fileName);
+      this.props.navigation.navigate("chat");
     }
   }
 
@@ -305,8 +309,12 @@ export default class Recording extends React.Component {
   }
 
   render() {
+    const params = this.props.navigation.state
+      .params;
+    const script = params.script;
+
     const micHeight = 180;
-    const top = 70;
+    const top = 50;
     const scriptHeigth =
       height - top * 2 - micHeight;
     const horizontalRate = 6;
@@ -347,9 +355,16 @@ export default class Recording extends React.Component {
             borderRadius: 30
           }}
         >
-          <ScrollView>
-            <Text>Hello</Text>
-          </ScrollView>
+          <View style={{ padding: 15 }}>
+            <Text
+              style={{
+                fontSize: 18,
+                textAlign: "center"
+              }}
+            >
+              {script}
+            </Text>
+          </View>
         </View>
 
         <View

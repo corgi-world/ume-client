@@ -77,57 +77,46 @@ export default class Chat extends Component {
     this._scrollToEnd();
   }
 
+  _changeScriptText(script, mark, newText) {
+    let startIndex = script.startIndex;
+    let length =
+      script.startIndex + script.length;
+    for (var i = startIndex; i < length; i++) {
+      for (var j = 0; j < script[i].length; j++) {
+        const s = script[i][j]
+          .split(mark)
+          .join(newText);
+        script[i][j] = s;
+      }
+    }
+  }
+
   _changeScriptsText(mark, newText) {
-    let script1 = CommonScript.MessageScript;
-    let startIndex1 = script1.startIndex;
-    let length1 =
-      script1.startIndex + script1.length;
-    for (var i = startIndex1; i < length1; i++) {
-      for (
-        var j = 0;
-        j < script1[i].length;
-        j++
-      ) {
-        const s = script1[i][j]
-          .split(mark)
-          .join(newText);
-        script1[i][j] = s;
-      }
-    }
-
-    let script2 = RelationsScript_P.MessageScript;
-    let startIndex2 = script2.startIndex;
-    let length2 =
-      script2.startIndex + script2.length;
-    for (var i = startIndex2; i < length2; i++) {
-      for (
-        var j = 0;
-        j < script2[i].length;
-        j++
-      ) {
-        const s = script2[i][j]
-          .split(mark)
-          .join(newText);
-        script2[i][j] = s;
-      }
-    }
-
-    let script3 = RelationsScript_N.MessageScript;
-    let startIndex3 = script3.startIndex;
-    let length3 =
-      script3.startIndex + script3.length;
-    for (var i = startIndex3; i < length3; i++) {
-      for (
-        var j = 0;
-        j < script3[i].length;
-        j++
-      ) {
-        const s = script3[i][j]
-          .split(mark)
-          .join(newText);
-        script3[i][j] = s;
-      }
-    }
+    this._changeScriptText(
+      CommonScript.MessageScript,
+      mark,
+      newText
+    );
+    this._changeScriptText(
+      RelationsScript_P.MessageScript,
+      mark,
+      newText
+    );
+    this._changeScriptText(
+      RelationsScript_N.MessageScript,
+      mark,
+      newText
+    );
+    this._changeScriptText(
+      RelationsScript_N.RecordingScript,
+      mark,
+      newText
+    );
+    this._changeScriptText(
+      RelationsScript_P.RecordingScript,
+      mark,
+      newText
+    );
   }
 
   _checkGifIndex(script) {
@@ -295,17 +284,17 @@ export default class Chat extends Component {
         } else if (level == 13) {
           nextMode = this.modeEnum.text;
         } else if (level == 14) {
-          nextMode = this.modeEnum.record;
+          nextMode = this.modeEnum.button;
         } else if (level == 15) {
           nextMode = this.modeEnum.button;
         } else if (level == 16) {
           nextMode = this.modeEnum.text;
         } else if (level == 17) {
-          nextMode = this.modeEnum.record;
+          nextMode = this.modeEnum.button;
         } else if (level == 18) {
           nextMode = this.modeEnum.button;
         } else if (level == 19) {
-          nextMode = this.modeEnum.record;
+          nextMode = this.modeEnum.button;
         } else if (level == 20) {
           nextMode = this.modeEnum.button;
         } else if (level == 21) {
@@ -327,7 +316,7 @@ export default class Chat extends Component {
         } else if (level == 14) {
           nextMode = this.modeEnum.button;
         } else if (level == 15) {
-          nextMode = this.modeEnum.record;
+          nextMode = this.modeEnum.button;
         } else if (level == 16) {
           nextMode = this.modeEnum.text;
         } else if (level == 17) {
@@ -341,7 +330,7 @@ export default class Chat extends Component {
         } else if (level == 21) {
           nextMode = this.modeEnum.button;
         } else if (level == 22) {
-          nextMode = this.modeEnum.record;
+          nextMode = this.modeEnum.button;
         } else if (level == 23) {
           nextMode = this.modeEnum.text;
         } else if (level == 24) {
@@ -351,7 +340,7 @@ export default class Chat extends Component {
         } else if (level == 26) {
           nextMode = this.modeEnum.button;
         } else if (level == 27) {
-          nextMode = this.modeEnum.record;
+          nextMode = this.modeEnum.button;
         } else if (level == 28) {
           nextMode = this.modeEnum.button;
         } else if (level == 29) {
@@ -378,10 +367,6 @@ export default class Chat extends Component {
 
   _pushedInputBlock = async (index, text) => {
     const { follow, mode, level } = this.state;
-
-    this.props.navigation.navigate(
-      "recording_modal"
-    );
 
     let nextFollow = follow;
     let nextMode = mode;
@@ -462,12 +447,34 @@ export default class Chat extends Component {
       if (this.isPositive) {
         if (level == 11) {
           this._changeScriptsText("((", text);
+        } else if (
+          level == 14 ||
+          level == 17 ||
+          level == 19
+        ) {
+          const index = this.script
+            .RecordingScript.scriptIndex[level];
+          const rs = this.script.RecordingScript[
+            index
+          ];
+          this.props.navigation.navigate(
+            "recording_modal",
+            {
+              script: rs,
+              _scrollToEnd: this._scrollToEnd,
+              _record: this._record
+            }
+          );
+          return;
         } else if (level == 23) {
+          const ms1 = this.script
+            .RecordingScript[0][0];
           const ms2 = this.script
-            .MessageScript[16][2];
+            .RecordingScript[1][0];
           const ms3 = this.script
-            .MessageScript[17][4];
+            .RecordingScript[2][0];
 
+          this.meditationTexts.add(ms1);
           this.meditationTexts.add(ms2);
           this.meditationTexts.add(ms3);
 
@@ -481,13 +488,32 @@ export default class Chat extends Component {
           return;
         }
       } else {
-        if (level == 33) {
+        if (
+          level == 15 ||
+          level == 22 ||
+          level == 27
+        ) {
+          const index = this.script
+            .RecordingScript.scriptIndex[level];
+          const rs = this.script.RecordingScript[
+            index
+          ];
+          this.props.navigation.navigate(
+            "recording_modal",
+            {
+              script: rs,
+              _scrollToEnd: this._scrollToEnd,
+              _record: this._record
+            }
+          );
+          return;
+        } else if (level == 33) {
           const ms1 = this.script
-            .MessageScript[15][4];
+            .RecordingScript[0][0];
           const ms2 = this.script
-            .MessageScript[22][3];
+            .RecordingScript[1][0];
           const ms3 = this.script
-            .MessageScript[27][2];
+            .RecordingScript[2][0];
 
           this.meditationTexts.add(ms1);
           this.meditationTexts.add(ms2);
@@ -531,7 +557,7 @@ export default class Chat extends Component {
         if (level == 10) {
           this._changeScriptsText("))", text);
         } else if (level == 13) {
-          this.meditationTexts.add(text);
+          this._changeScriptsText("__", text);
         }
       } else {
         if (level == 24) {
