@@ -10,7 +10,7 @@ import Meditation from "../screens/Meditation";
 import SelectBeliefs from "../screens/SelectBeliefs";
 import SelectedBeliefs from "../screens/SelectedBeliefs";
 
-const MainStackNavigator = createStackNavigator(
+export default MainStackNavigator = createStackNavigator(
   {
     index: {
       screen: Index,
@@ -65,27 +65,9 @@ const MainStackNavigator = createStackNavigator(
         };
       }
     }
-    /*
-    signup: {
-      screen: Signup,
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerStyle: {
-            borderBottomWidth: 0,
-            backgroundColor: "white"
-          },
-          headerTintColor: "black",
-          headerTitle: "회원가입"
-        };
-      }
-    }*/
   },
   {
     headerMode: "screen",
     headerBackTitleVisible: false
   }
-);
-
-export default MainStackContainer = createAppContainer(
-  MainStackNavigator
 );

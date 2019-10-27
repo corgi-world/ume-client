@@ -40,5 +40,46 @@ export default {
     file: require("../assets/gifs/7.gif"),
     width: 480,
     height: 266
+  },
+
+  11: {
+    file: require("../assets/gifs/11.gif"),
+    width: 500,
+    height: 314
+  },
+  22: {
+    file: require("../assets/gifs/22.gif"),
+    width: 480,
+    height: 360
+  },
+  33: {
+    file: require("../assets/gifs/33.gif"),
+    width: 300,
+    height: 168
+  },
+  44: {
+    file: require("../assets/gifs/44.gif"),
+    width: 350,
+    height: 262
+  },
+  55: {
+    file: require("../assets/gifs/55.gif"),
+    width: 500,
+    height: 260
+  },
+  66: {
+    file: require("../assets/gifs/66.gif"),
+    width: 405,
+    height: 280
+  },
+  77: {
+    file: require("../assets/gifs/77.gif"),
+    width: 245,
+    height: 220
+  },
+  88: {
+    file: require("../assets/gifs/88.gif"),
+    width: 480,
+    height: 270
   }
 };

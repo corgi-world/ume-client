@@ -14,8 +14,8 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 const CollectionsList = require("collections/list");
 
 import CommonScript from "../scripts/CommonScript";
-import RelationsScript from "../scripts/RelationsScript";
-import WorkplaceScript from "../scripts/WorkplaceScript";
+import RelationsScript_P from "../scripts/RelationsScript_P";
+import RelationsScript_N from "../scripts/RelationsScript_N";
 
 import MessageManager from "../components/message/MessageManager";
 
@@ -28,10 +28,8 @@ export default class Chat extends Component {
   constructor(props) {
     super(props);
 
+    this.isPositive = true;
     this.script = CommonScript;
-
-    this.meditationText = null;
-    this.audioFileName = null;
 
     this.meditationTexts = new CollectionsList();
     this.audioFileNames = new CollectionsList();
@@ -97,7 +95,7 @@ export default class Chat extends Component {
       }
     }
 
-    let script2 = WorkplaceScript.MessageScript;
+    let script2 = RelationsScript_P.MessageScript;
     let startIndex2 = script2.startIndex;
     let length2 =
       script2.startIndex + script2.length;
@@ -111,6 +109,23 @@ export default class Chat extends Component {
           .split(mark)
           .join(newText);
         script2[i][j] = s;
+      }
+    }
+
+    let script3 = RelationsScript_N.MessageScript;
+    let startIndex3 = script3.startIndex;
+    let length3 =
+      script3.startIndex + script3.length;
+    for (var i = startIndex3; i < length3; i++) {
+      for (
+        var j = 0;
+        j < script3[i].length;
+        j++
+      ) {
+        const s = script3[i][j]
+          .split(mark)
+          .join(newText);
+        script3[i][j] = s;
       }
     }
   }
@@ -135,6 +150,10 @@ export default class Chat extends Component {
     this.keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       this._keyboardDidHide.bind(this)
+    );
+
+    this.props.navigation.navigate(
+      "recording_modal"
     );
 
     const name = await AsyncStorage.getItem(
@@ -268,51 +287,88 @@ export default class Chat extends Component {
       } else if (level == 8) {
         nextMode = this.modeEnum.button;
       } else if (level == 9) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 10) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 11) {
         nextMode = this.modeEnum.button;
-      } else if (level == 12) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 13) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 14) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 15) {
-        nextMode = this.modeEnum.record;
-      } else if (level == 16) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 17) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 18) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 19) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 20) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 21) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 22) {
-        nextMode = this.modeEnum.record;
-      } else if (level == 23) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 24) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 25) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 26) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 27) {
-        nextMode = this.modeEnum.record;
-      } else if (level == 28) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 29) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 30) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 31) {
-        nextMode = this.modeEnum.button;
+      }
+      if (this.isPositive) {
+        if (level == 10) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 11) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 12) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 13) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 14) {
+          nextMode = this.modeEnum.record;
+        } else if (level == 15) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 16) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 17) {
+          nextMode = this.modeEnum.record;
+        } else if (level == 18) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 19) {
+          nextMode = this.modeEnum.record;
+        } else if (level == 20) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 21) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 22) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 23) {
+          nextMode = this.modeEnum.button;
+        }
+      } else {
+        if (level == 10) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 11) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 12) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 13) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 14) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 15) {
+          nextMode = this.modeEnum.record;
+        } else if (level == 16) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 17) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 18) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 19) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 20) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 21) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 22) {
+          nextMode = this.modeEnum.record;
+        } else if (level == 23) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 24) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 25) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 26) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 27) {
+          nextMode = this.modeEnum.record;
+        } else if (level == 28) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 29) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 30) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 31) {
+          nextMode = this.modeEnum.text;
+        } else if (level == 32) {
+          nextMode = this.modeEnum.button;
+        } else if (level == 33) {
+          nextMode = this.modeEnum.button;
+        }
       }
     }
 
@@ -340,21 +396,112 @@ export default class Chat extends Component {
       nextLevel = level + 1;
 
       if (level == 8) {
+        if (0 <= index && index <= 2) {
+          this.isPositive = false;
+          CommonScript.ButtonScript[
+            nextLevel
+          ][0] = "학업 스트레스";
+          CommonScript.ButtonScript[
+            nextLevel
+          ][1] = "대인 관계";
+          CommonScript.ButtonScript[
+            nextLevel
+          ][2] = "취업 문제";
+          CommonScript.ButtonScript[
+            nextLevel
+          ][3] = "직장 스트레스";
+        } else {
+          this.isPositive = true;
+          CommonScript.ButtonScript[
+            nextLevel
+          ][0] = "학업 성취";
+          CommonScript.ButtonScript[
+            nextLevel
+          ][1] = "대인 관계";
+          CommonScript.ButtonScript[
+            nextLevel
+          ][2] = "취업";
+          CommonScript.ButtonScript[
+            nextLevel
+          ][3] = "직장 성과";
+        }
+
         let feel =
           CommonScript.ButtonScript[text];
         this._changeScriptsText("##", feel);
+      } else if (level == 9) {
+        if (this.isPositive) {
+          if (text.includes("대인")) {
+            this.script = RelationsScript_P;
+          } else if (text.includes("학업")) {
+            this.script = RelationsScript_P;
+          } else if (text.includes("취업")) {
+            this.script = RelationsScript_P;
+          } else if (text.includes("직장")) {
+            this.script = RelationsScript_P;
+          } else {
+            this.script = RelationsScript_P;
+          }
+        } else {
+          if (text.includes("대인")) {
+            this.script = RelationsScript_N;
+          } else if (text.includes("학업")) {
+            this.script = RelationsScript_N;
+          } else if (text.includes("취업")) {
+            this.script = RelationsScript_N;
+          } else if (text.includes("직장")) {
+            this.script = RelationsScript_N;
+          } else {
+            this.script = RelationsScript_N;
+          }
+        }
+
+        this._changeScriptsText("$$", text);
       }
 
-      if (level == 31) {
-        console.log(this.audioFileName);
-        this.props.navigation.navigate(
-          "meditation",
-          {
-            audioFileNames: this.audioFileNames,
-            texts: this.meditationTexts.toArray()
-          }
-        );
-        return;
+      if (this.isPositive) {
+        if (level == 11) {
+          this._changeScriptsText("((", text);
+        } else if (level == 23) {
+          const ms2 = this.script
+            .MessageScript[16][2];
+          const ms3 = this.script
+            .MessageScript[17][4];
+
+          this.meditationTexts.add(ms2);
+          this.meditationTexts.add(ms3);
+
+          this.props.navigation.navigate(
+            "meditation",
+            {
+              audioFileNames: this.audioFileNames,
+              texts: this.meditationTexts.toArray()
+            }
+          );
+          return;
+        }
+      } else {
+        if (level == 33) {
+          const ms1 = this.script
+            .MessageScript[15][4];
+          const ms2 = this.script
+            .MessageScript[22][3];
+          const ms3 = this.script
+            .MessageScript[27][2];
+
+          this.meditationTexts.add(ms1);
+          this.meditationTexts.add(ms2);
+          this.meditationTexts.add(ms3);
+
+          this.props.navigation.navigate(
+            "meditation",
+            {
+              audioFileNames: this.audioFileNames,
+              texts: this.meditationTexts.toArray()
+            }
+          );
+          return;
+        }
       }
     }
 
@@ -379,29 +526,19 @@ export default class Chat extends Component {
     if (follow == this.followEnum.main) {
       nextMode = this.modeEnum.wait;
       nextLevel = level + 1;
-      if (level == 9) {
-        let keyword = "";
-        if (text.includes("학업")) {
-          keyword = "학업 스트레스";
-          this.script = WorkplaceScript;
-        } else if (text.includes("대인")) {
-          keyword = "대인 관계";
-          this.script = WorkplaceScript;
-        } else if (text.includes("취업")) {
-          keyword = "취업 스트레스";
-          this.script = WorkplaceScript;
-        } else {
-          keyword = "직장 스트레스";
-          this.script = WorkplaceScript;
-        }
 
-        this._changeScriptsText("$$", keyword);
-      } else if (level == 24) {
-        const iam = text;
-        this._changeScriptsText("%%", iam);
-      } else if (level == 29) {
-        const value = text;
-        this._changeScriptsText("&&", value);
+      if (this.isPositive) {
+        if (level == 10) {
+          this._changeScriptsText("))", text);
+        } else if (level == 13) {
+          this.meditationTexts.add(text);
+        }
+      } else {
+        if (level == 24) {
+          this._changeScriptsText("%%", text);
+        } else if (level == 29) {
+          this._changeScriptsText("&&", text);
+        }
       }
     }
 
@@ -426,18 +563,6 @@ export default class Chat extends Component {
       nextLevel = level + 1;
 
       this.audioFileNames.add(fileName);
-      if (level == 27) {
-        const ms1 = this.script
-          .MessageScript[15][3];
-        const ms2 = this.script
-          .MessageScript[22][2];
-        const ms3 = this.script
-          .MessageScript[27][2];
-
-        this.meditationTexts.add(ms1);
-        this.meditationTexts.add(ms2);
-        this.meditationTexts.add(ms3);
-      }
     }
 
     this._makeMessages(

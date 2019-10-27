@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import MainTabContainer from "./navigation/MainTab";
-import MainStackContainer from "./navigation/MainStack";
+import RootStackContainer from "./navigation/RootStack";
 
 import Ddd from "./screens/test";
 
@@ -12,6 +12,6 @@ export default class App extends Component {
   }
 
   render() {
-    return <MainStackContainer />;
+    return <RootStackContainer />;
   }
 }

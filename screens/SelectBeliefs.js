@@ -48,18 +48,28 @@ export default class SelectBeliefs extends Component {
       >
         <View
           style={{
-            flex: 3,
-            justifyContent: "flex-end",
+            flex: 4,
             paddingLeft: 20,
-            paddingBottom: 10
+            paddingVertical: 20
           }}
         >
-          <Text style={styles.title}>
-            Select Your
-          </Text>
-          <Text style={styles.title}>
-            core beliefs
-          </Text>
+          <View style={{ marginTop: 15 }}>
+            <Text style={styles.title}>
+              Select Your core beliefs
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 20
+            }}
+          >
+            <Text style={styles.subTitle}>
+              난 현재 나를
+            </Text>
+            <Text style={styles.subTitle}>
+              어떻게 바라보고 있을까?
+            </Text>
+          </View>
         </View>
         <View style={{ flex: 12 }}>
           <ScrollView
@@ -147,7 +157,11 @@ export default class SelectBeliefs extends Component {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 30,
+    fontSize: 23,
+    fontWeight: "600"
+  },
+  subTitle: {
+    fontSize: 28,
     fontWeight: "600"
   }
 });

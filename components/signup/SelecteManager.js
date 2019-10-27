@@ -47,6 +47,7 @@ export default class SelecteManager extends Component {
     return (
       <View>
         <View style={styles.container}>
+          {/*
           <View style={{ marginBottom: 10 }}>
             <Text
               style={{
@@ -56,7 +57,7 @@ export default class SelecteManager extends Component {
             >
               {title}
             </Text>
-          </View>
+          </View>*/}
           {items}
         </View>
       </View>
@@ -67,7 +68,7 @@ export default class SelecteManager extends Component {
 const styles = StyleSheet.create({
   container: {
     marginLeft: 20,
-    marginTop: 30
+    marginTop: 20
   },
   containerRow: {
     flexDirection: "row"

@@ -99,7 +99,7 @@ export default class SelectedBeliefs extends Component {
         >
           <Text style={styles.semiTitle}>
             Me, you're more lovable if you know
-            how to yourself
+            how to love yourself
           </Text>
         </View>
 

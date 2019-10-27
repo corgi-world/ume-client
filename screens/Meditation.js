@@ -109,7 +109,7 @@ export default class Meditation extends React.Component {
     this.bgm = await this._selectedAudioFile(
       "bgm.mp3",
       true,
-      0.7
+      0.4
     );
 
     for (var i = 0; i < length; i++) {
@@ -154,7 +154,7 @@ export default class Meditation extends React.Component {
           shouldPlay: false,
           isLooping: isLooping,
           isMuted: this.state.muted,
-          volume: this.state.volume,
+          volume: volume,
           rate: this.state.rate,
           shouldCorrectPitch: this.state
             .shouldCorrectPitch
