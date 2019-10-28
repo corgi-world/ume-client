@@ -3,8 +3,7 @@ import {
   View,
   ScrollView,
   Text,
-  TouchableOpacity,
-  StyleSheet
+  TouchableOpacity
 } from "react-native";
 
 export default class Buttons extends Component {
@@ -31,49 +30,72 @@ export default class Buttons extends Component {
       };
     }
 
-    return (
-      <View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{
-            flexDirection: "row",
-            borderTopWidth: 0.5,
-            paddingTop: 15,
-            paddingHorizontal: 20
-          }}
-        >
-          {Object.values(items).map(item => {
-            return (
-              <TouchableOpacity
-                key={item.text}
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 10,
-                  borderRadius: 30,
-                  borderWidth: 1,
-                  marginRight: 15
-                }}
-                onPress={() => {
-                  this.props._pushedInputBlock(
-                    item.index,
-                    item.text
-                  );
-                }}
-              >
-                <Text style={{ fontSize: 16 }}>
-                  {item.text}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      </View>
+    let buttons = [];
+    buttons.push(
+      Object.values(items).map(item => {
+        return (
+          <TouchableOpacity
+            key={item.text}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 10,
+              borderRadius: 30,
+              borderWidth: 1,
+              marginRight: 15
+            }}
+            onPress={() => {
+              this.props._pushedInputBlock(
+                item.index,
+                item.text
+              );
+            }}
+          >
+            <Text style={{ fontSize: 16 }}>
+              {item.text}
+            </Text>
+          </TouchableOpacity>
+        );
+      })
     );
+
+    if (script.length == 1) {
+      return (
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              borderTopWidth: 0.5,
+              paddingTop: 15,
+              justifyContent: "center"
+            }}
+          >
+            {buttons}
+          </View>
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={{
+              flexDirection: "row",
+              borderTopWidth: 0.5,
+              paddingTop: 15,
+              paddingLeft: 20
+            }}
+          >
+            {buttons}
+            <View
+              style={{
+                width: 20
+              }}
+            ></View>
+          </ScrollView>
+        </View>
+      );
+    }
   }
 }
-
-const styles = StyleSheet.create({
-  button: {}
-});
