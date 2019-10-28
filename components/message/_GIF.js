@@ -40,7 +40,7 @@ export default class _GIF extends Component {
     return (
       <View
         style={{
-          width: width - 150,
+          width: img_width + 20,
           height: img_height + 20,
           justifyContent: "center",
           alignItems: "center"

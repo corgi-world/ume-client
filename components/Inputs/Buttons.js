@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import {
   View,
+  ScrollView,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  StyleSheet
 } from "react-native";
 
 export default class Buttons extends Component {
@@ -30,31 +32,48 @@ export default class Buttons extends Component {
     }
 
     return (
-      <View style={{ borderBottomWidth: 0.2 }}>
-        {Object.values(items).map(item => {
-          return (
-            <TouchableOpacity
-              key={item.text}
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                paddingVertical: 10,
-                borderTopWidth: 0.5
-              }}
-              onPress={() => {
-                this.props._pushedInputBlock(
-                  item.index,
-                  item.text
-                );
-              }}
-            >
-              <Text style={{ fontSize: 16 }}>
-                {item.text}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+      <View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            flexDirection: "row",
+            borderTopWidth: 0.5,
+            paddingTop: 15,
+            paddingHorizontal: 20
+          }}
+        >
+          {Object.values(items).map(item => {
+            return (
+              <TouchableOpacity
+                key={item.text}
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 10,
+                  borderRadius: 30,
+                  borderWidth: 1,
+                  marginRight: 15
+                }}
+                onPress={() => {
+                  this.props._pushedInputBlock(
+                    item.index,
+                    item.text
+                  );
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>
+                  {item.text}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  button: {}
+});

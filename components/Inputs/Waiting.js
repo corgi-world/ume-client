@@ -15,7 +15,8 @@ export default class Waiting extends Component {
 
   render() {
     const { script, level } = this.props;
-    const height = script.length * 39;
+    // const height = script.length * 39;
+    const height = 50;
 
     console.log(this.props.waitingText);
 
