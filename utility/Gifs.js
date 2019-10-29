@@ -81,5 +81,36 @@ export default {
     file: require("../assets/gifs/88.gif"),
     width: 480,
     height: 270
+  },
+
+  R_P_1: {
+    file: require("../assets/gifs/recording/corgi.gif"),
+    width: 480,
+    height: 240
+  },
+  R_P_2: {
+    file: require("../assets/gifs/recording/corgi.gif"),
+    width: 480,
+    height: 240
+  },
+  R_P_3: {
+    file: require("../assets/gifs/recording/corgi.gif"),
+    width: 480,
+    height: 240
+  },
+  R_N_1: {
+    file: require("../assets/gifs/recording/corgi.gif"),
+    width: 480,
+    height: 240
+  },
+  R_N_2: {
+    file: require("../assets/gifs/recording/corgi.gif"),
+    width: 480,
+    height: 240
+  },
+  R_N_3: {
+    file: require("../assets/gifs/recording/corgi.gif"),
+    width: 480,
+    height: 240
   }
 };

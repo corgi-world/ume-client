@@ -6,6 +6,8 @@ import {
   TouchableOpacity
 } from "react-native";
 
+import Colors from "../../utility/Colors";
+
 export default class TextBox extends Component {
   constructor(props) {
     super(props);
@@ -56,7 +58,8 @@ export default class TextBox extends Component {
             width: 50,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "#15badb",
+            backgroundColor:
+              Colors.userMessageBack,
             borderRadius: 10,
             marginRight: 10,
             marginVertical: 10

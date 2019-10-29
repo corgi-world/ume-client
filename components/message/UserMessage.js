@@ -10,7 +10,11 @@ const { width, height } = Dimensions.get(
   "window"
 );
 
+import * as Font from "expo-font";
+
 import TypingAnimation from "./Typing";
+
+import Colors from "../../utility/Colors";
 
 import Playback from "./Playback";
 import RecordingCheck from "./RecordingCheck";
@@ -18,7 +22,10 @@ import RecordingCheck from "./RecordingCheck";
 export default class ServiceMesseage extends Component {
   constructor(props) {
     super(props);
-    this.state = { isWait: true };
+    this.state = {
+      isWait: true,
+      fontLoaded: false
+    };
   }
 
   componentDidMount() {
@@ -36,6 +43,13 @@ export default class ServiceMesseage extends Component {
     } else {
       this.setState({ isWait: false });
     }
+
+    (async () => {
+      await Font.loadAsync({
+        NanumSquareRegular: require("../../assets/fonts/NanumSquareRegular.ttf")
+      });
+      this.setState({ fontLoaded: true });
+    })();
   }
 
   render() {
@@ -133,7 +147,8 @@ export default class ServiceMesseage extends Component {
                   fontSize: 16,
                   padding: 10,
                   fontWeight: "400",
-                  color: "white"
+                  color: Colors.userMessageFont,
+                  fontFamily: "NanumSquareRegular"
                 }}
               >
                 {this.props.text}
@@ -151,12 +166,12 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 15,
-    backgroundColor: "#15badb",
+    backgroundColor: Colors.userMessageBack,
     maxWidth: width - 150
   },
   second_message: {
     borderRadius: 15,
-    backgroundColor: "#15badb",
+    backgroundColor: Colors.userMessageBack,
     maxWidth: width - 150
   }
 });

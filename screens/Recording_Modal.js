@@ -16,6 +16,8 @@ import * as Permissions from "expo-permissions";
 
 import uuidv1 from "uuid/v1";
 
+import _Gif from "../components/message/_GIF";
+
 const { width, height } = Dimensions.get(
   "window"
 );
@@ -314,11 +316,13 @@ export default class Recording extends React.Component {
     const script = params.script;
 
     const micHeight = 180;
-    const top = 50;
+    const top = 120;
     const scriptHeigth =
       height - top * 2 - micHeight;
     const horizontalRate = 6;
     const left = width / (horizontalRate * 2);
+
+    const gifFileName = params.gifFileName;
 
     if (!this.state.haveRecordingPermissions) {
       return (
@@ -356,6 +360,7 @@ export default class Recording extends React.Component {
           }}
         >
           <View style={{ padding: 15 }}>
+            {/*
             <Text
               style={{
                 fontSize: 18,
@@ -364,6 +369,14 @@ export default class Recording extends React.Component {
             >
               {script}
             </Text>
+            */}
+
+            <_Gif
+              gifFileName={gifFileName}
+              _maxWidth={
+                width - width / horizontalRate
+              }
+            />
           </View>
         </View>
 
@@ -377,7 +390,8 @@ export default class Recording extends React.Component {
             bottom: 0,
             zIndex: 5,
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            marginBottom: 7
           }}
         >
           <TouchableHighlight

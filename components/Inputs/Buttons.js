@@ -6,10 +6,23 @@ import {
   TouchableOpacity
 } from "react-native";
 
+import * as Font from "expo-font";
+
+import Colors from "../../utility/Colors";
+
 export default class Buttons extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      fontLoaded: false
+    };
+
+    (async () => {
+      await Font.loadAsync({
+        NanumSquareRegular: require("../../assets/fonts/NanumSquareRegular.ttf")
+      });
+      this.setState({ fontLoaded: true });
+    })();
   }
 
   componentDidMount() {
@@ -41,8 +54,9 @@ export default class Buttons extends Component {
               justifyContent: "center",
               padding: 10,
               borderRadius: 30,
-              borderWidth: 1,
-              marginRight: 15
+              borderWidth: 1.5,
+              marginRight: 15,
+              borderColor: Colors.userMessageBack
             }}
             onPress={() => {
               this.props._pushedInputBlock(
@@ -51,7 +65,14 @@ export default class Buttons extends Component {
               );
             }}
           >
-            <Text style={{ fontSize: 16 }}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: Colors.userMessageBack,
+                fontWeight: "500",
+                fontFamily: "NanumSquareRegular"
+              }}
+            >
               {item.text}
             </Text>
           </TouchableOpacity>

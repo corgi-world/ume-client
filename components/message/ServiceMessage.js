@@ -10,7 +10,11 @@ const { width, height } = Dimensions.get(
   "window"
 );
 
+import * as Font from "expo-font";
+
 import TypingAnimation from "./Typing";
+
+import Colors from "../../utility/Colors";
 
 import Playback from "./Playback";
 import RecordingCheck from "./RecordingCheck";
@@ -20,7 +24,10 @@ import _Gif from "./_GIF";
 export default class ServiceMesseage extends Component {
   constructor(props) {
     super(props);
-    this.state = { isWait: true };
+    this.state = {
+      isWait: true,
+      fontLoaded: false
+    };
 
     this.isUnmount = false;
   }
@@ -45,6 +52,13 @@ export default class ServiceMesseage extends Component {
         this.setState({ isWait: false });
       }
     }
+
+    (async () => {
+      await Font.loadAsync({
+        NanumSquareRegular: require("../../assets/fonts/NanumSquareRegular.ttf")
+      });
+      this.setState({ fontLoaded: true });
+    })();
   }
 
   componentWillUnmount() {
@@ -87,7 +101,10 @@ export default class ServiceMesseage extends Component {
                   : styles.second_message
               }
             >
-              <_Gif gifFileName={gifFileName} />
+              <_Gif
+                gifFileName={gifFileName}
+                _maxWidth={205}
+              />
             </View>
           </View>
         );
@@ -105,7 +122,11 @@ export default class ServiceMesseage extends Component {
                 style={[
                   {
                     fontSize: 16,
-                    padding: 10
+                    padding: 10,
+                    color:
+                      Colors.serviceMessageFont,
+                    fontFamily:
+                      "NanumSquareRegular"
                   },
                   _isFocused
                     ? { fontWeight: "600" }
@@ -135,12 +156,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 15,
-    backgroundColor: "#eaeaea",
+    backgroundColor: Colors.serviceMessageBack,
     maxWidth: width - 150
   },
   second_message: {
     borderRadius: 15,
-    backgroundColor: "#eaeaea",
+    backgroundColor: Colors.serviceMessageBack,
     maxWidth: width - 150
   }
 });

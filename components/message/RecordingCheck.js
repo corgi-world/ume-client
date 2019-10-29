@@ -381,10 +381,12 @@ export default class RecordingCheck extends React.Component {
             paddingHorizontal: 10
           }}
         >
-          <Slider
-            style={styles.playbackSlider}
+          {/*
             trackImage={ICON_TRACK_1.module}
             thumbImage={ICON_THUMB_1.module}
+            */}
+          <Slider
+            style={styles.playbackSlider}
             value={this._getSeekSliderPosition()}
             onValueChange={
               this._onSeekSliderValueChange
@@ -405,7 +407,7 @@ export default class RecordingCheck extends React.Component {
               width: DEVICE_WIDTH - 150
             }}
           >
-            <Text>
+            <Text style={{ color: "white" }}>
               {this._getPlaybackTimestamp()}
             </Text>
           </View>

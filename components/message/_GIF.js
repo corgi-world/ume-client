@@ -19,19 +19,21 @@ export default class _GIF extends Component {
   }
 
   _calSize(org_width, org_height) {
+    const { _maxWidth } = this.props;
+
     img_height = 0;
-    ratio = org_width / 205;
+    ratio = org_width / _maxWidth;
     img_height = org_height / ratio;
 
     return img_height;
   }
 
   render() {
-    const { gifFileName } = this.props;
+    const { gifFileName, _maxWidth } = this.props;
     const obj = Gifs[gifFileName];
     const org_width = obj.width;
     const org_height = obj.height;
-    const img_width = 205;
+    const img_width = _maxWidth;
     const img_height = this._calSize(
       org_width,
       org_height

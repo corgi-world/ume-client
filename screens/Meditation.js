@@ -88,6 +88,7 @@ export default class Meditation extends React.Component {
       shouldCorrectPitch: true,
       volume: 1.0,
       rate: 1.0,
+      fontLoaded: false,
 
       text: ""
     };
@@ -101,6 +102,13 @@ export default class Meditation extends React.Component {
   }
 
   componentDidMount = async () => {
+    (async () => {
+      await Font.loadAsync({
+        NanumSquareRegular: require("../assets/fonts/NanumSquareRegular.ttf")
+      });
+      this.setState({ fontLoaded: true });
+    })();
+
     const params = this.props.navigation.state
       .params;
     const audioFileNames = params.audioFileNames.toArray();
@@ -416,7 +424,8 @@ export default class Meditation extends React.Component {
                 style={{
                   fontSize: 20,
                   color: "black",
-                  textAlign: "center"
+                  textAlign: "center",
+                  fontFamily: "NanumSquareRegular"
                 }}
               >
                 {mt}
