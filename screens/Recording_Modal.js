@@ -9,6 +9,8 @@ import {
   ScrollView
 } from "react-native";
 
+import * as Font from "expo-font";
+
 import { Asset } from "expo-asset";
 import { Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
@@ -80,6 +82,13 @@ export default class Recording extends React.Component {
     setTimeout(() => {
       this.props._scrollToEnd();
     }, 150);*/
+
+    (async () => {
+      await Font.loadAsync({
+        NanumSquareRegular: require("../assets/fonts/NanumSquareRegular.ttf")
+      });
+      this.setState({ fontLoaded: true });
+    })();
 
     this._askForPermissions();
   }
@@ -324,6 +333,8 @@ export default class Recording extends React.Component {
 
     const gifFileName = params.gifFileName;
 
+    const isGif = params.isGif;
+
     if (!this.state.haveRecordingPermissions) {
       return (
         <View style={{ flex: 1 }}>
@@ -370,13 +381,24 @@ export default class Recording extends React.Component {
               {script}
             </Text>
             */}
-
-            <_Gif
-              gifFileName={gifFileName}
-              _maxWidth={
-                width - width / horizontalRate
-              }
-            />
+            {isGif ? (
+              <_Gif
+                gifFileName={gifFileName}
+                _maxWidth={
+                  width - width / horizontalRate
+                }
+              />
+            ) : (
+              <Text
+                style={{
+                  fontSize: 18,
+                  textAlign: "center",
+                  fontFamily: "NanumSquareRegular"
+                }}
+              >
+                {script}
+              </Text>
+            )}
           </View>
         </View>
 

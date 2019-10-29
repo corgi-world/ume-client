@@ -7,6 +7,8 @@ import {
   StyleSheet
 } from "react-native";
 
+import Colors from "../utility/Colors";
+
 export default class SelectedBeliefs extends Component {
   constructor(props) {
     super(props);
@@ -157,7 +159,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 20,
     padding: 10,
-    backgroundColor: "#15badb"
+    backgroundColor: Colors.userMessageBack
   },
   none_text: {
     color: "white",

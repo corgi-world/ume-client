@@ -460,13 +460,16 @@ export default class Chat extends Component {
           const gifFileName = this.script
             .RecordingScript.gifs[level];
 
+          const isGif = !(level == 14);
+
           this.props.navigation.navigate(
             "recording_modal",
             {
               script: rs,
               _scrollToEnd: this._scrollToEnd,
               _record: this._record,
-              gifFileName
+              gifFileName,
+              isGif
             }
           );
           return;
@@ -511,7 +514,8 @@ export default class Chat extends Component {
               script: rs,
               _scrollToEnd: this._scrollToEnd,
               _record: this._record,
-              gifFileName
+              gifFileName,
+              isGif: true
             }
           );
           return;
