@@ -8,8 +8,8 @@ export default {
   },
   1: {
     file: require("../assets/gifs/1.gif"),
-    width: 480,
-    height: 360
+    width: 650,
+    height: 610
   },
   2: {
     file: require("../assets/gifs/2.gif"),
@@ -84,33 +84,33 @@ export default {
   },
 
   R_P_1: {
-    file: require("../assets/gifs/recording/corgi.gif"),
-    width: 480,
-    height: 240
+    file: require("../assets/gifs/recording/R_P_1.gif"),
+    width: 680,
+    height: 780
   },
   R_P_2: {
-    file: require("../assets/gifs/recording/corgi.gif"),
-    width: 480,
-    height: 240
+    file: require("../assets/gifs/recording/R_P_1.gif"),
+    width: 680,
+    height: 780
   },
   R_P_3: {
-    file: require("../assets/gifs/recording/corgi.gif"),
-    width: 480,
-    height: 240
+    file: require("../assets/gifs/recording/R_P_2.gif"),
+    width: 680,
+    height: 780
   },
   R_N_1: {
-    file: require("../assets/gifs/recording/corgi.gif"),
-    width: 480,
-    height: 240
+    file: require("../assets/gifs/recording/script_1.gif"),
+    width: 680,
+    height: 780
   },
   R_N_2: {
-    file: require("../assets/gifs/recording/corgi.gif"),
-    width: 480,
-    height: 240
+    file: require("../assets/gifs/recording/script_2.gif"),
+    width: 680,
+    height: 780
   },
   R_N_3: {
-    file: require("../assets/gifs/recording/corgi.gif"),
-    width: 480,
-    height: 240
+    file: require("../assets/gifs/recording/script_3.gif"),
+    width: 680,
+    height: 780
   }
 };
