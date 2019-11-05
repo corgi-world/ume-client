@@ -1,7 +1,16 @@
 import React, { Component } from "react";
-import { View, Image } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Dimensions
+} from "react-native";
 
-import ServerURL from "../../utility/ServerURL";
+import Gifs from "../../utility/Gifs";
+
+const { width, height } = Dimensions.get(
+  "window"
+);
 
 export default class _GIF extends Component {
   constructor(props) {
@@ -20,10 +29,10 @@ export default class _GIF extends Component {
   }
 
   render() {
-    const { gif, _maxWidth } = this.props;
-    const obj = gif.file;
-    const org_width = gif.width;
-    const org_height = gif.height;
+    const { gifFileName, _maxWidth } = this.props;
+    const obj = Gifs[gifFileName];
+    const org_width = obj.width;
+    const org_height = obj.height;
     const img_width = _maxWidth;
     const img_height = this._calSize(
       org_width,
@@ -40,7 +49,7 @@ export default class _GIF extends Component {
         }}
       >
         <Image
-          source={{ uri: ServerURL + obj }}
+          source={obj.file}
           style={{
             width: img_width,
             height: img_height

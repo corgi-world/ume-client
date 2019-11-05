@@ -31,7 +31,7 @@ export default class MessageManager extends Component {
       isPlayback,
       isRecordingCheck,
       audioFileName,
-      gif
+      gifIndex
     } = this.props;
 
     let objects = {};
@@ -52,7 +52,7 @@ export default class MessageManager extends Component {
           isPlayback,
           isRecordingCheck,
           audioFileName,
-          gif
+          gifIndex
         };
 
         objects[id] = object;
@@ -72,7 +72,7 @@ export default class MessageManager extends Component {
         isPlayback,
         isRecordingCheck,
         audioFileName,
-        gif
+        gifIndex
       };
       objects[id] = object;
       this.setState({ messages: objects });
@@ -91,7 +91,7 @@ export default class MessageManager extends Component {
       type,
       texts,
       delays,
-      gif
+      gifIndex
     } = this.props;
 
     const length = texts.length;
@@ -108,7 +108,7 @@ export default class MessageManager extends Component {
           isFirst: false,
           text: texts[level],
           delay: delays[level],
-          gif
+          gifIndex
         }
       };
 
@@ -159,7 +159,10 @@ export default class MessageManager extends Component {
                     this.props.focusedIndex ==
                     message.index
                   }
-                  gif={this.props.gif}
+                  _isGif={
+                    this.props.gifIndex ==
+                    message.index
+                  }
                 />
               );
             } else {

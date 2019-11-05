@@ -24,7 +24,7 @@ export default class Index extends Component {
   }
 
   async componentDidMount() {
-    await AsyncStorage.clear();
+    // await AsyncStorage.clear();
 
     var name = await AsyncStorage.getItem("name");
     name = name === null ? false : name;

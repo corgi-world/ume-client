@@ -8,14 +8,13 @@ import {
   AsyncStorage
 } from "react-native";
 
+import ServerURL from "../utility/ServerURL";
+import axios from "axios";
+
 import uuidv1 from "uuid/v1";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 
 const CollectionsList = require("collections/list");
-
-import CommonScript from "../scripts/CommonScript";
-import RelationsScript_P from "../scripts/RelationsScript_P";
-import RelationsScript_N from "../scripts/RelationsScript_N";
 
 import MessageManager from "../components/message/MessageManager";
 
@@ -28,8 +27,12 @@ export default class Chat extends Component {
   constructor(props) {
     super(props);
 
-    this.isPositive = true;
-    this.script = CommonScript;
+    this.scriptObject = {};
+
+    this.isPositive = false;
+    this.event = "대인관계";
+    this.day = 0;
+    this.contentCount = 0;
 
     this.meditationTexts = new CollectionsList();
     this.audioFileNames = new CollectionsList();
@@ -45,6 +48,11 @@ export default class Chat extends Component {
       button: 2,
       text: 3,
       record: 4
+    };
+
+    this.inputTypes = {
+      button: this.modeEnum.button,
+      text: this.modeEnum.text
     };
 
     this.messageTypeEnum = {
@@ -77,58 +85,44 @@ export default class Chat extends Component {
     this._scrollToEnd();
   }
 
-  _changeScriptText(script, mark, newText) {
-    let startIndex = script.startIndex;
-    let length =
-      script.startIndex + script.length;
-    for (var i = startIndex; i < length; i++) {
-      for (var j = 0; j < script[i].length; j++) {
-        const s = script[i][j]
+  _changeScriptText(scriptObject, mark, newText) {
+    let length = scriptObject.endLevel + 1;
+    for (var i = 0; i < length; i++) {
+      const messages = scriptObject[i].messages;
+      for (var j = 0; j < messages.length; j++) {
+        const s = messages[j]
           .split(mark)
           .join(newText);
-        script[i][j] = s;
+        messages[j] = s;
       }
     }
   }
 
-  _changeScriptsText(mark, newText) {
-    this._changeScriptText(
-      CommonScript.MessageScript,
-      mark,
-      newText
-    );
-    this._changeScriptText(
-      RelationsScript_P.MessageScript,
-      mark,
-      newText
-    );
-    this._changeScriptText(
-      RelationsScript_N.MessageScript,
-      mark,
-      newText
-    );
-    this._changeScriptText(
-      RelationsScript_N.RecordingScript,
-      mark,
-      newText
-    );
-    this._changeScriptText(
-      RelationsScript_P.RecordingScript,
-      mark,
-      newText
-    );
-  }
+  async callServer(url, parameter) {
+    let result = null;
 
-  _checkGifIndex(script) {
-    for (var i = 0; i < script.length; i++) {
-      let text = script[i];
-      let isGif = text.includes("**");
-      if (isGif) {
-        return i;
-      }
+    try {
+      result = await axios.post(
+        ServerURL + url,
+        parameter,
+        { timeout: 2000 }
+      );
+    } catch (err) {
+      console.log("token axios 1");
     }
 
-    return null;
+    return result.data;
+  }
+
+  async changeScriptObject(p) {
+    this.scriptObject = await this.callServer(
+      "script/get",
+      p
+    );
+
+    if (p.scriptType === "contents") {
+      this.contentCount += 1;
+    }
   }
 
   async componentDidMount() {
@@ -144,10 +138,16 @@ export default class Chat extends Component {
     const name = await AsyncStorage.getItem(
       "name"
     );
-    this._changeScriptsText("@@", name);
 
-    let gifIndex = this._checkGifIndex(
-      this.script.MessageScript[0]
+    await this.changeScriptObject({
+      scriptType: "openings",
+      day: this.day
+    });
+
+    this._changeScriptText(
+      this.scriptObject,
+      "@@",
+      name
     );
 
     const serviceMessageId = uuidv1();
@@ -156,9 +156,9 @@ export default class Chat extends Component {
         id: serviceMessageId,
         type: this.messageTypeEnum.service,
         isComplete: false,
-        texts: this.script.MessageScript[0],
-        delays: this.script.Delay[0],
-        gifIndex
+        texts: this.scriptObject[0].messages,
+        delays: this.scriptObject[0].delays,
+        gif: this.scriptObject[0].gif
       }
     };
 
@@ -232,7 +232,7 @@ export default class Chat extends Component {
                   audioFileName={
                     message.audioFileName
                   }
-                  gifIndex={message.gifIndex}
+                  gif={message.gif}
                 />
               );
             })}
@@ -253,108 +253,9 @@ export default class Chat extends Component {
     let nextWaitingText = "";
 
     if (follow == this.followEnum.main) {
-      if (level == 0) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 1) {
-        nextMode = this.modeEnum.text;
-      } else if (level == 2) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 3) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 4) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 5) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 6) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 7) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 8) {
-        nextMode = this.modeEnum.button;
-      } else if (level == 9) {
-        nextMode = this.modeEnum.button;
-      }
-      if (this.isPositive) {
-        if (level == 10) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 11) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 12) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 13) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 14) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 15) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 16) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 17) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 18) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 19) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 20) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 21) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 22) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 23) {
-          nextMode = this.modeEnum.button;
-        }
-      } else {
-        if (level == 10) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 11) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 12) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 13) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 14) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 15) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 16) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 17) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 18) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 19) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 20) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 21) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 22) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 23) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 24) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 25) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 26) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 27) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 28) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 29) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 30) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 31) {
-          nextMode = this.modeEnum.text;
-        } else if (level == 32) {
-          nextMode = this.modeEnum.button;
-        } else if (level == 33) {
-          nextMode = this.modeEnum.button;
-        }
-      }
+      const inputType = this.scriptObject[level]
+        .inputType;
+      nextMode = this.inputTypes[inputType];
     }
 
     this.setState({
@@ -369,7 +270,7 @@ export default class Chat extends Component {
     const { follow, mode, level } = this.state;
 
     let nextFollow = follow;
-    let nextMode = mode;
+    let nextMode = this.modeEnum.wait;
     let nextLevel = level;
     let isPlayback = null;
     let isRecordingCheck = null;
@@ -377,169 +278,19 @@ export default class Chat extends Component {
     let focusedIndex = null;
 
     if (follow == this.followEnum.main) {
-      nextMode = this.modeEnum.wait;
-      nextLevel = level + 1;
+      const endLevel = this.scriptObject.endLevel;
+      if (level < endLevel) {
+        nextLevel += 1;
+      } else if (level == endLevel) {
+        await this.changeScriptObject({
+          scriptType: "contents",
+          isPositive: this.isPositive,
+          event: this.event,
+          day: this.day,
+          contentCount: this.contentCount
+        });
 
-      if (level == 8) {
-        if (0 <= index && index <= 2) {
-          this.isPositive = false;
-          CommonScript.ButtonScript[
-            nextLevel
-          ][0] = "학업 스트레스";
-          CommonScript.ButtonScript[
-            nextLevel
-          ][1] = "대인 관계";
-          CommonScript.ButtonScript[
-            nextLevel
-          ][2] = "취업 문제";
-          CommonScript.ButtonScript[
-            nextLevel
-          ][3] = "직장 스트레스";
-        } else {
-          this.isPositive = true;
-          CommonScript.ButtonScript[
-            nextLevel
-          ][0] = "학업 성취";
-          CommonScript.ButtonScript[
-            nextLevel
-          ][1] = "대인 관계";
-          CommonScript.ButtonScript[
-            nextLevel
-          ][2] = "취업";
-          CommonScript.ButtonScript[
-            nextLevel
-          ][3] = "직장 성과";
-        }
-
-        let feel =
-          CommonScript.ButtonScript[text];
-        this._changeScriptsText("##", feel);
-      } else if (level == 9) {
-        if (this.isPositive) {
-          if (text.includes("대인")) {
-            this.script = RelationsScript_P;
-          } else if (text.includes("학업")) {
-            this.script = RelationsScript_P;
-          } else if (text.includes("취업")) {
-            this.script = RelationsScript_P;
-          } else if (text.includes("직장")) {
-            this.script = RelationsScript_P;
-          } else {
-            this.script = RelationsScript_P;
-          }
-        } else {
-          if (text.includes("대인")) {
-            this.script = RelationsScript_N;
-          } else if (text.includes("학업")) {
-            this.script = RelationsScript_N;
-          } else if (text.includes("취업")) {
-            this.script = RelationsScript_N;
-          } else if (text.includes("직장")) {
-            this.script = RelationsScript_N;
-          } else {
-            this.script = RelationsScript_N;
-          }
-        }
-
-        this._changeScriptsText("$$", text);
-      }
-
-      if (this.isPositive) {
-        if (level == 11) {
-          this._changeScriptsText("((", text);
-        } else if (
-          level == 14 ||
-          level == 17 ||
-          level == 19
-        ) {
-          const index = this.script
-            .RecordingScript.scriptIndex[level];
-          const rs = this.script.RecordingScript[
-            index
-          ];
-          const gifFileName = this.script
-            .RecordingScript.gifs[level];
-
-          const isGif = !(level == 14);
-
-          this.props.navigation.navigate(
-            "recording_modal",
-            {
-              script: rs,
-              _scrollToEnd: this._scrollToEnd,
-              _record: this._record,
-              gifFileName,
-              isGif
-            }
-          );
-          return;
-        } else if (level == 23) {
-          const ms1 = this.script
-            .RecordingScript[0][0];
-          const ms2 = this.script
-            .RecordingScript[1][0];
-          const ms3 = this.script
-            .RecordingScript[2][0];
-
-          this.meditationTexts.add(ms1);
-          this.meditationTexts.add(ms2);
-          this.meditationTexts.add(ms3);
-
-          this.props.navigation.navigate(
-            "meditation",
-            {
-              audioFileNames: this.audioFileNames,
-              texts: this.meditationTexts.toArray()
-            }
-          );
-          return;
-        }
-      } else {
-        if (
-          level == 15 ||
-          level == 22 ||
-          level == 27
-        ) {
-          const index = this.script
-            .RecordingScript.scriptIndex[level];
-          const rs = this.script.RecordingScript[
-            index
-          ];
-          const gifFileName = this.script
-            .RecordingScript.gifs[level];
-
-          this.props.navigation.navigate(
-            "recording_modal",
-            {
-              script: rs,
-              _scrollToEnd: this._scrollToEnd,
-              _record: this._record,
-              gifFileName,
-              isGif: true
-            }
-          );
-          return;
-        } else if (level == 33) {
-          const ms1 = this.script
-            .RecordingScript[0][0];
-          const ms2 = this.script
-            .RecordingScript[1][0];
-          const ms3 = this.script
-            .RecordingScript[2][0];
-
-          this.meditationTexts.add(ms1);
-          this.meditationTexts.add(ms2);
-          this.meditationTexts.add(ms3);
-
-          this.props.navigation.navigate(
-            "meditation",
-            {
-              audioFileNames: this.audioFileNames,
-              texts: this.meditationTexts.toArray()
-            }
-          );
-          return;
-        }
+        nextLevel = 0;
       }
     }
 
@@ -562,22 +313,7 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     if (follow == this.followEnum.main) {
-      nextMode = this.modeEnum.wait;
-      nextLevel = level + 1;
-
-      if (this.isPositive) {
-        if (level == 10) {
-          this._changeScriptsText("))", text);
-        } else if (level == 13) {
-          this._changeScriptsText("__", text);
-        }
-      } else {
-        if (level == 24) {
-          this._changeScriptsText("%%", text);
-        } else if (level == 29) {
-          this._changeScriptsText("&&", text);
-        }
-      }
+      const endLevel = this.scriptObject.endLevel;
     }
 
     this._makeMessages(
@@ -639,25 +375,21 @@ export default class Chat extends Component {
       }
     };
 
-    let gifIndex = this._checkGifIndex(
-      this.script.MessageScript[nextLevel]
-    );
-
     const serviceMessageId = uuidv1();
     const serviceObject = {
       [serviceMessageId]: {
         id: serviceMessageId,
         type: this.messageTypeEnum.service,
         isComplete: false,
-        texts: this.script.MessageScript[
-          nextLevel
-        ],
-        delays: this.script.Delay[nextLevel],
+        texts: this.scriptObject[nextLevel]
+          .messages,
+        delays: this.scriptObject[nextLevel]
+          .delays,
         isRecordingCheck,
         isPlayback,
         audioFileName,
         focusedIndex,
-        gifIndex
+        gif: this.scriptObject[nextLevel].gif
       }
     };
 
@@ -695,7 +427,9 @@ export default class Chat extends Component {
     } else if (mode == this.modeEnum.wait) {
       return (
         <Waiting
-          script={this.script.ButtonScript[level]}
+          script={
+            this.scriptObject[level].buttonTexts
+          }
           level={level}
           waitingText={waitingText}
           _scrollToEnd={this._scrollToEnd}
@@ -704,7 +438,9 @@ export default class Chat extends Component {
     } else if (mode == this.modeEnum.button) {
       return (
         <Buttons
-          script={this.script.ButtonScript[level]}
+          script={
+            this.scriptObject[level].buttonTexts
+          }
           _pushedInputBlock={
             this._pushedInputBlock
           }

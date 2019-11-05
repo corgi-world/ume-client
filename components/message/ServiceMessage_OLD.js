@@ -67,11 +67,15 @@ export default class ServiceMesseage extends Component {
 
   render() {
     const { isWait } = this.state;
-    const { _isFocused, gif, text } = this.props;
+    const {
+      _isFocused,
+      _isGif,
+      text
+    } = this.props;
 
-    let isGif = false;
-    if (gif != null) {
-      isGif = gif.index == this.props.index;
+    let gifFileName = "";
+    if (_isGif) {
+      gifFileName = text.split("**").join("");
     }
 
     if (isWait) {
@@ -87,7 +91,7 @@ export default class ServiceMesseage extends Component {
         </View>
       );
     } else {
-      if (isGif) {
+      if (_isGif) {
         return (
           <View style={styles.box}>
             <View
@@ -97,7 +101,10 @@ export default class ServiceMesseage extends Component {
                   : styles.second_message
               }
             >
-              <_Gif gif={gif} _maxWidth={205} />
+              <_Gif
+                gifFileName={gifFileName}
+                _maxWidth={205}
+              />
             </View>
           </View>
         );
@@ -126,7 +133,7 @@ export default class ServiceMesseage extends Component {
                     : {}
                 ]}
               >
-                {text}
+                {this.props.text}
               </Text>
             </View>
           </View>
