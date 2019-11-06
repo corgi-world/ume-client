@@ -29,8 +29,8 @@ export default class Chat extends Component {
 
     this.scriptObject = {};
 
-    this.isPositive = false;
-    this.event = "대인관계";
+    this.state = "";
+    this.event = "";
     this.day = 0;
     this.contentCount = 0;
 
@@ -108,7 +108,7 @@ export default class Chat extends Component {
         { timeout: 2000 }
       );
     } catch (err) {
-      console.log("token axios 1");
+      console.log("script");
     }
 
     return result.data;
@@ -279,12 +279,32 @@ export default class Chat extends Component {
 
     if (follow == this.followEnum.main) {
       const endLevel = this.scriptObject.endLevel;
+
+      const changeScript = this.scriptObject[
+        level
+      ].changeScript;
+      if (changeScript != undefined) {
+        const mark = changeScript.mark;
+        const newText =
+          changeScript.newTexts[index];
+        this._changeScriptText(
+          this.scriptObject,
+          mark,
+          newText
+        );
+      }
+
+      const branch = this.scriptObject[level]
+        .branch;
+      if (branch != undefined) {
+      }
+
       if (level < endLevel) {
         nextLevel += 1;
       } else if (level == endLevel) {
         await this.changeScriptObject({
           scriptType: "contents",
-          isPositive: this.isPositive,
+          state: this.state,
           event: this.event,
           day: this.day,
           contentCount: this.contentCount
