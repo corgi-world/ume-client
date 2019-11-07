@@ -328,6 +328,7 @@ export default class Chat extends Component {
           level
         ].recordingText;
         if (recordingText) {
+          this.meditationTexts.add(recordingText);
           this.props.navigation.navigate(
             "recording_modal",
             {
@@ -339,6 +340,20 @@ export default class Chat extends Component {
           return;
         }
       } else if (level == endLevel) {
+        const meditation = this.scriptObject[
+          level
+        ].meditation;
+        if (meditation) {
+          this.props.navigation.navigate(
+            "meditation",
+            {
+              audioFileNames: this.audioFileNames,
+              texts: this.meditationTexts.toArray()
+            }
+          );
+          return;
+        }
+
         await this.changeScriptObject({
           scriptType: "contents",
           sentiment: this.sentiment,
@@ -406,6 +421,7 @@ export default class Chat extends Component {
       const endLevel = this.scriptObject.endLevel;
       if (level < endLevel) {
         nextLevel += 1;
+        this.audioFileNames.add(fileName);
       }
     }
 
