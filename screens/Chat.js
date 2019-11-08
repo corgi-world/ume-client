@@ -443,6 +443,39 @@ export default class Chat extends Component {
     let nextMode = this.modeEnum.wait;
     let nextLevel = level;
 
+    // messages change
+    const changeMessages = this.scriptObject[
+      level
+    ].changeMessages;
+    if (changeMessages != undefined) {
+      const mark = changeMessages.mark;
+      const newText = text;
+      this._changeScriptText(
+        this.scriptObject,
+        mark,
+        newText
+      );
+    }
+
+    // recordingText change
+    const changeRecordingText = this.scriptObject[
+      level
+    ].changeRecordingText;
+    if (changeRecordingText != undefined) {
+      const newRecordingText = text;
+      const targetLevel =
+        changeRecordingText.targetLevel;
+
+      const s = this.scriptObject[
+        targetLevel
+      ].recordingText
+        .split(mark)
+        .join(newRecordingText);
+      this.scriptObject[
+        targetLevel
+      ].recordingText = s;
+    }
+
     // changeSentimentText
     this.changeSentimentTexts(level);
 
