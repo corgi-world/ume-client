@@ -465,6 +465,7 @@ export default class Chat extends Component {
       const newRecordingText = text;
       const targetLevel =
         changeRecordingText.targetLevel;
+      const mark = changeRecordingText.mark;
 
       const s = this.scriptObject[
         targetLevel
@@ -520,6 +521,16 @@ export default class Chat extends Component {
       if (level < endLevel) {
         nextLevel += 1;
         this.audioFileNames.add(fileName);
+      } else if (level == endLevel) {
+        await this.changeScriptObject({
+          scriptType: "contents",
+          sentiment: this.sentiment,
+          event: this.event,
+          day: this.day,
+          contentCount: this.contentCount
+        });
+
+        nextLevel = 0;
       }
     }
 
