@@ -36,6 +36,9 @@ export default class Chat extends Component {
     this.day = 0;
     this.contentCount = 0;
 
+    this.sentimentText = "";
+    this.eventText = "";
+
     this.meditationTexts = new CollectionsList();
     this.audioFileNames = new CollectionsList();
 
@@ -131,6 +134,11 @@ export default class Chat extends Component {
       "@@",
       this.userName
     );
+
+    if (this.sentimentText != "") {
+    }
+    if (this.eventText != "") {
+    }
   }
 
   async componentDidMount() {
@@ -321,6 +329,47 @@ export default class Chat extends Component {
         }
       }
 
+      // saveSentimentText
+      const saveSentimentText = this.scriptObject[
+        level
+      ].saveSentimentText;
+      if (saveSentimentText) {
+        this.sentimentText = text;
+      }
+
+      // saveEventText
+      const saveEventText = this.scriptObject[
+        level
+      ].saveEventText;
+      if (saveEventText) {
+        this.eventText = text;
+      }
+
+      // changeSentimentText
+      const changeSentimentText = this
+        .scriptObject[level].changeSentimentText;
+      if (changeSentimentText != undefined) {
+        const mark = changeSentimentText.mark;
+        this._changeScriptText(
+          this.scriptObject,
+          mark,
+          this.sentimentText
+        );
+      }
+
+      // changeEventText
+      const changeEventText = this.scriptObject[
+        level
+      ].changeEventText;
+      if (changeEventText != undefined) {
+        const mark = changeEventText.mark;
+        this._changeScriptText(
+          this.scriptObject,
+          mark,
+          this.eventText
+        );
+      }
+
       const endLevel = this.scriptObject.endLevel;
       if (level < endLevel) {
         nextLevel += 1;
@@ -383,6 +432,32 @@ export default class Chat extends Component {
     let nextFollow = follow;
     let nextMode = this.modeEnum.wait;
     let nextLevel = level;
+
+    // changeSentimentText
+    const changeSentimentText = this.scriptObject[
+      level
+    ].changeSentimentText;
+    if (changeSentimentText != undefined) {
+      const mark = changeSentimentText.mark;
+      this._changeScriptText(
+        this.scriptObject,
+        mark,
+        this.sentimentText
+      );
+    }
+
+    // changeEventText
+    const changeEventText = this.scriptObject[
+      level
+    ].changeEventText;
+    if (changeEventText != undefined) {
+      const mark = changeEventText.mark;
+      this._changeScriptText(
+        this.scriptObject,
+        mark,
+        this.eventText
+      );
+    }
 
     if (follow == this.followEnum.main) {
       const endLevel = this.scriptObject.endLevel;
