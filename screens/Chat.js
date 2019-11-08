@@ -135,9 +135,37 @@ export default class Chat extends Component {
       this.userName
     );
 
-    if (this.sentimentText != "") {
+    // changeSentimentText
+    this.changeSentimentTexts(0);
+
+    // changeEventText
+    this.changeEventTexts(0);
+  }
+
+  changeSentimentTexts(level) {
+    const changeSentimentText = this.scriptObject[
+      level
+    ].changeSentimentText;
+    if (changeSentimentText != undefined) {
+      const mark = changeSentimentText.mark;
+      this._changeScriptText(
+        this.scriptObject,
+        mark,
+        this.sentimentText
+      );
     }
-    if (this.eventText != "") {
+  }
+  changeEventTexts(level) {
+    const changeEventText = this.scriptObject[
+      level
+    ].changeEventText;
+    if (changeEventText != undefined) {
+      const mark = changeEventText.mark;
+      this._changeScriptText(
+        this.scriptObject,
+        mark,
+        this.eventText
+      );
     }
   }
 
@@ -333,8 +361,9 @@ export default class Chat extends Component {
       const saveSentimentText = this.scriptObject[
         level
       ].saveSentimentText;
-      if (saveSentimentText) {
-        this.sentimentText = text;
+      if (saveSentimentText != undefined) {
+        this.sentimentText =
+          saveSentimentText[text];
       }
 
       // saveEventText
@@ -346,29 +375,10 @@ export default class Chat extends Component {
       }
 
       // changeSentimentText
-      const changeSentimentText = this
-        .scriptObject[level].changeSentimentText;
-      if (changeSentimentText != undefined) {
-        const mark = changeSentimentText.mark;
-        this._changeScriptText(
-          this.scriptObject,
-          mark,
-          this.sentimentText
-        );
-      }
+      this.changeSentimentTexts(level);
 
       // changeEventText
-      const changeEventText = this.scriptObject[
-        level
-      ].changeEventText;
-      if (changeEventText != undefined) {
-        const mark = changeEventText.mark;
-        this._changeScriptText(
-          this.scriptObject,
-          mark,
-          this.eventText
-        );
-      }
+      this.changeEventTexts(level);
 
       const endLevel = this.scriptObject.endLevel;
       if (level < endLevel) {
@@ -434,30 +444,10 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     // changeSentimentText
-    const changeSentimentText = this.scriptObject[
-      level
-    ].changeSentimentText;
-    if (changeSentimentText != undefined) {
-      const mark = changeSentimentText.mark;
-      this._changeScriptText(
-        this.scriptObject,
-        mark,
-        this.sentimentText
-      );
-    }
+    this.changeSentimentTexts(level);
 
     // changeEventText
-    const changeEventText = this.scriptObject[
-      level
-    ].changeEventText;
-    if (changeEventText != undefined) {
-      const mark = changeEventText.mark;
-      this._changeScriptText(
-        this.scriptObject,
-        mark,
-        this.eventText
-      );
-    }
+    this.changeEventTexts(level);
 
     if (follow == this.followEnum.main) {
       const endLevel = this.scriptObject.endLevel;
