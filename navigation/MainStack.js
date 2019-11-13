@@ -1,5 +1,6 @@
+import React, { Component } from "react";
 import { createAppContainer } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 
 import Index from "../screens/Index";
 import Login from "../screens/Login";
@@ -53,7 +54,15 @@ export default MainStackNavigator = createStackNavigator(
             backgroundColor: "white"
           },
           headerTintColor: "black",
-          headerTitle: ""
+          headerTitle: "",
+          headerLeft: (
+            <HeaderBackButton
+              tintColor={"black"}
+              onPress={() => {
+                navigation.navigate("chat");
+              }}
+            />
+          )
         };
       }
     },

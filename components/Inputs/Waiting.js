@@ -18,8 +18,6 @@ export default class Waiting extends Component {
     // const height = script.length * 39;
     const height = 50;
 
-    console.log(this.props.waitingText);
-
     return (
       <View
         style={{

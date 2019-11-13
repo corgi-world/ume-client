@@ -69,13 +69,38 @@ export default class Chat extends Component {
       follow: this.followEnum.none,
       mode: this.modeEnum.text,
       level: 0,
-      waitingText: "",
 
       messages: {}
     };
 
     this.isUnmount = false;
   }
+
+  _backup = async () => {
+    if (this.contentCount > 0) {
+      let backup = {
+        userName: this.userName,
+        day: this.day,
+        scriptObject: this.scriptObject,
+        sentiment: this.sentimentText,
+        event: this.event,
+        contentCount: this.contentCount,
+        sentimentText: this.sentimentText,
+        eventText: this.eventText,
+        meditationTexts: this.meditationTexts,
+        audioFileNames: this.audioFileNames,
+        messages: this.state.messages
+      };
+
+      const s = JSON.stringify(backup);
+      await AsyncStorage.setItem("backup", s);
+    }
+  };
+
+  _restore = async backup => {
+    const obj = JSON.parse(backup);
+    console.log(obj);
+  };
 
   _scrollToEnd = () => {
     if (this.isUnmount) {
@@ -95,9 +120,7 @@ export default class Chat extends Component {
     for (var i = 0; i < length; i++) {
       const messages = scriptObject[i].messages;
       for (var j = 0; j < messages.length; j++) {
-        const s = messages[j]
-          .split(mark)
-          .join(newText);
+        const s = messages[j].split(mark).join(newText);
         messages[j] = s;
       }
     }
@@ -107,11 +130,7 @@ export default class Chat extends Component {
     let result = null;
 
     try {
-      result = await axios.post(
-        ServerURL + url,
-        parameter,
-        { timeout: 2000 }
-      );
+      result = await axios.post(ServerURL + url, parameter, { timeout: 2000 });
     } catch (err) {
       console.log("script get error");
     }
@@ -120,20 +139,13 @@ export default class Chat extends Component {
   }
 
   async changeScriptObject(p) {
-    this.scriptObject = await this.callServer(
-      "script/get",
-      p
-    );
+    this.scriptObject = await this.callServer("script/get", p);
 
     if (p.scriptType === "contents") {
       this.contentCount += 1;
     }
 
-    this._changeScriptText(
-      this.scriptObject,
-      "@@",
-      this.userName
-    );
+    this._changeScriptText(this.scriptObject, "@@", this.userName);
 
     // changeSentimentText
     this.changeSentimentTexts(0);
@@ -143,29 +155,17 @@ export default class Chat extends Component {
   }
 
   changeSentimentTexts(level) {
-    const changeSentimentText = this.scriptObject[
-      level
-    ].changeSentimentText;
+    const changeSentimentText = this.scriptObject[level].changeSentimentText;
     if (changeSentimentText != undefined) {
       const mark = changeSentimentText.mark;
-      this._changeScriptText(
-        this.scriptObject,
-        mark,
-        this.sentimentText
-      );
+      this._changeScriptText(this.scriptObject, mark, this.sentimentText);
     }
   }
   changeEventTexts(level) {
-    const changeEventText = this.scriptObject[
-      level
-    ].changeEventText;
+    const changeEventText = this.scriptObject[level].changeEventText;
     if (changeEventText != undefined) {
       const mark = changeEventText.mark;
-      this._changeScriptText(
-        this.scriptObject,
-        mark,
-        this.eventText
-      );
+      this._changeScriptText(this.scriptObject, mark, this.eventText);
     }
   }
 
@@ -179,14 +179,19 @@ export default class Chat extends Component {
       this._keyboardDidHide.bind(this)
     );
 
-    this.userName = await AsyncStorage.getItem(
-      "name"
-    );
+    const backup = await AsyncStorage.getItem("backup");
+    if (backup == null) {
+      this.userName = await AsyncStorage.getItem("name");
+      this.day = await AsyncStorage.getItem("day");
+      if (this.day == null) this.day = 0;
 
-    await this.changeScriptObject({
-      scriptType: "openings",
-      day: this.day
-    });
+      await this.changeScriptObject({
+        scriptType: "openings",
+        day: this.day
+      });
+    } else {
+      this._restore(backup);
+    }
 
     const serviceMessageId = uuidv1();
     const serviceObject = {
@@ -246,9 +251,7 @@ export default class Chat extends Component {
             onScrollEndDrag={event => {}}
             scrollEventThrottle={160}
           >
-            {Object.values(
-              this.state.messages
-            ).map(message => {
+            {Object.values(this.state.messages).map(message => {
               return (
                 <MessageManager
                   key={message.id}
@@ -257,19 +260,11 @@ export default class Chat extends Component {
                   isComplete={message.isComplete}
                   texts={message.texts}
                   delays={message.delays}
-                  _updateComplete={this._updateComplete.bind(
-                    this
-                  )}
-                  focusedIndex={
-                    message.focusedIndex
-                  }
+                  _updateComplete={this._updateComplete.bind(this)}
+                  focusedIndex={message.focusedIndex}
                   isPlayback={message.isPlayback}
-                  isRecordingCheck={
-                    message.isRecordingCheck
-                  }
-                  audioFileName={
-                    message.audioFileName
-                  }
+                  isRecordingCheck={message.isRecordingCheck}
+                  audioFileName={message.audioFileName}
                   gif={message.gif}
                 />
               );
@@ -288,19 +283,18 @@ export default class Chat extends Component {
     let nextFollow = follow;
     let nextMode = mode;
     let nextLevel = level;
-    let nextWaitingText = "";
+
+    this._backup();
 
     if (follow == this.followEnum.main) {
-      const inputType = this.scriptObject[level]
-        .inputType;
+      const inputType = this.scriptObject[level].inputType;
       nextMode = this.inputTypes[inputType];
     }
 
     this.setState({
       follow: nextFollow,
       mode: nextMode,
-      level: nextLevel,
-      waitingText: nextWaitingText
+      level: nextLevel
     });
   };
 
@@ -317,37 +311,23 @@ export default class Chat extends Component {
 
     if (follow == this.followEnum.main) {
       // messages change
-      const changeMessages = this.scriptObject[
-        level
-      ].changeMessages;
+      const changeMessages = this.scriptObject[level].changeMessages;
       if (changeMessages != undefined) {
         const mark = changeMessages.mark;
-        const newText =
-          changeMessages.newTexts[index];
-        this._changeScriptText(
-          this.scriptObject,
-          mark,
-          newText
-        );
+        const newText = changeMessages.newTexts[index];
+        this._changeScriptText(this.scriptObject, mark, newText);
       }
 
       // buttonTexts change
-      const changeButtonTexts = this.scriptObject[
-        level
-      ].changeButtonTexts;
+      const changeButtonTexts = this.scriptObject[level].changeButtonTexts;
       if (changeButtonTexts != undefined) {
-        const newButtonTexts =
-          changeButtonTexts[index];
-        const targetLevel =
-          changeButtonTexts.targetLevel;
-        this.scriptObject[
-          targetLevel
-        ].buttonTexts = newButtonTexts;
+        const newButtonTexts = changeButtonTexts[index];
+        const targetLevel = changeButtonTexts.targetLevel;
+        this.scriptObject[targetLevel].buttonTexts = newButtonTexts;
       }
 
       // branch
-      const branch = this.scriptObject[level]
-        .branch;
+      const branch = this.scriptObject[level].branch;
       if (branch != undefined) {
         const number = branch.number;
         if (number == 0) {
@@ -358,18 +338,13 @@ export default class Chat extends Component {
       }
 
       // saveSentimentText
-      const saveSentimentText = this.scriptObject[
-        level
-      ].saveSentimentText;
+      const saveSentimentText = this.scriptObject[level].saveSentimentText;
       if (saveSentimentText != undefined) {
-        this.sentimentText =
-          saveSentimentText[text];
+        this.sentimentText = saveSentimentText[text];
       }
 
       // saveEventText
-      const saveEventText = this.scriptObject[
-        level
-      ].saveEventText;
+      const saveEventText = this.scriptObject[level].saveEventText;
       if (saveEventText) {
         this.eventText = text;
       }
@@ -383,33 +358,24 @@ export default class Chat extends Component {
       const endLevel = this.scriptObject.endLevel;
       if (level < endLevel) {
         nextLevel += 1;
-        const recordingText = this.scriptObject[
-          level
-        ].recordingText;
+        const recordingText = this.scriptObject[level].recordingText;
         if (recordingText) {
           this.meditationTexts.add(recordingText);
-          this.props.navigation.navigate(
-            "recording_modal",
-            {
-              script: recordingText,
-              _scrollToEnd: this._scrollToEnd,
-              _record: this._record
-            }
-          );
+          this.props.navigation.navigate("recording_modal", {
+            script: recordingText,
+            _scrollToEnd: this._scrollToEnd,
+            _record: this._record
+          });
           return;
         }
       } else if (level == endLevel) {
-        const meditation = this.scriptObject[
-          level
-        ].meditation;
+        const meditation = this.scriptObject[level].meditation;
         if (meditation) {
-          this.props.navigation.navigate(
-            "meditation",
-            {
-              audioFileNames: this.audioFileNames,
-              texts: this.meditationTexts.toArray()
-            }
-          );
+          await AsyncStorage.setItem("backup", "null");
+          this.props.navigation.navigate("meditation", {
+            audioFileNames: this.audioFileNames,
+            texts: this.meditationTexts.toArray()
+          });
           return;
         }
 
@@ -444,37 +410,24 @@ export default class Chat extends Component {
     let nextLevel = level;
 
     // messages change
-    const changeMessages = this.scriptObject[
-      level
-    ].changeMessages;
+    const changeMessages = this.scriptObject[level].changeMessages;
     if (changeMessages != undefined) {
       const mark = changeMessages.mark;
       const newText = text;
-      this._changeScriptText(
-        this.scriptObject,
-        mark,
-        newText
-      );
+      this._changeScriptText(this.scriptObject, mark, newText);
     }
 
     // recordingText change
-    const changeRecordingText = this.scriptObject[
-      level
-    ].changeRecordingText;
+    const changeRecordingText = this.scriptObject[level].changeRecordingText;
     if (changeRecordingText != undefined) {
       const newRecordingText = text;
-      const targetLevel =
-        changeRecordingText.targetLevel;
+      const targetLevel = changeRecordingText.targetLevel;
       const mark = changeRecordingText.mark;
 
-      const s = this.scriptObject[
-        targetLevel
-      ].recordingText
+      const s = this.scriptObject[targetLevel].recordingText
         .split(mark)
         .join(newRecordingText);
-      this.scriptObject[
-        targetLevel
-      ].recordingText = s;
+      this.scriptObject[targetLevel].recordingText = s;
     }
 
     // changeSentimentText
@@ -500,12 +453,7 @@ export default class Chat extends Component {
       }
     }
 
-    this._makeMessages(
-      text,
-      nextFollow,
-      nextMode,
-      nextLevel
-    );
+    this._makeMessages(text, nextFollow, nextMode, nextLevel);
   };
   _record = async fileName => {
     const { follow, mode, level } = this.state;
@@ -576,10 +524,8 @@ export default class Chat extends Component {
         id: serviceMessageId,
         type: this.messageTypeEnum.service,
         isComplete: false,
-        texts: this.scriptObject[nextLevel]
-          .messages,
-        delays: this.scriptObject[nextLevel]
-          .delays,
+        texts: this.scriptObject[nextLevel].messages,
+        delays: this.scriptObject[nextLevel].delays,
         isRecordingCheck,
         isPlayback,
         audioFileName,
@@ -606,12 +552,7 @@ export default class Chat extends Component {
   }
 
   _makeInput() {
-    const {
-      follow,
-      mode,
-      level,
-      waitingText
-    } = this.state;
+    const { follow, mode, level } = this.state;
 
     if (follow == this.followEnum.none) {
       return <View />;
@@ -622,39 +563,26 @@ export default class Chat extends Component {
     } else if (mode == this.modeEnum.wait) {
       return (
         <Waiting
-          script={
-            this.scriptObject[level].buttonTexts
-          }
+          script={this.scriptObject[level].buttonTexts}
           level={level}
-          waitingText={waitingText}
           _scrollToEnd={this._scrollToEnd}
         />
       );
     } else if (mode == this.modeEnum.button) {
       return (
         <Buttons
-          script={
-            this.scriptObject[level].buttonTexts
-          }
-          _pushedInputBlock={
-            this._pushedInputBlock
-          }
+          script={this.scriptObject[level].buttonTexts}
+          _pushedInputBlock={this._pushedInputBlock}
           _scrollToEnd={this._scrollToEnd}
         />
       );
     } else if (mode == this.modeEnum.text) {
       return (
-        <TextBox
-          _scrollToEnd={this._scrollToEnd}
-          _sendText={this._sendText}
-        />
+        <TextBox _scrollToEnd={this._scrollToEnd} _sendText={this._sendText} />
       );
     } else if (mode == this.modeEnum.record) {
       return (
-        <Recording
-          _scrollToEnd={this._scrollToEnd}
-          _record={this._record}
-        />
+        <Recording _scrollToEnd={this._scrollToEnd} _record={this._record} />
       );
     }
   }
