@@ -66,12 +66,16 @@ export default class ServiceMesseage extends Component {
   }
 
   render() {
-    const { isWait } = this.state;
+    const { isWait, fontLoaded } = this.state;
     const { _isFocused, gif, text } = this.props;
 
     let isGif = false;
     if (gif != null) {
       isGif = gif.index == this.props.index;
+    }
+
+    if (!fontLoaded) {
+      return <View></View>;
     }
 
     if (isWait) {

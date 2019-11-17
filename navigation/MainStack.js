@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { createAppContainer } from "react-navigation";
-import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
+import {
+  createStackNavigator,
+  HeaderBackButton
+} from "react-navigation-stack";
 
 import Index from "../screens/Index";
 import Login from "../screens/Login";
@@ -55,6 +58,7 @@ export default MainStackNavigator = createStackNavigator(
           },
           headerTintColor: "black",
           headerTitle: "",
+          gesturesEnabled: false,
           headerLeft: (
             <HeaderBackButton
               tintColor={"black"}

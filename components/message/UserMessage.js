@@ -54,11 +54,16 @@ export default class ServiceMesseage extends Component {
 
   render() {
     const { isWait } = false;
+    const { fontLoaded } = this.state;
     const {
       isPlayback,
       isRecordingCheck,
       audioFileName
     } = this.props;
+
+    if (!fontLoaded) {
+      return <View></View>;
+    }
 
     if (isWait) {
       return (
