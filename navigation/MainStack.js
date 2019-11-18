@@ -7,6 +7,7 @@ import {
 
 import Index from "../screens/Index";
 import Login from "../screens/Login";
+import Home from "../screens/Home";
 
 import Chat from "../screens/Chat";
 import Meditation from "../screens/Meditation";
@@ -20,7 +21,8 @@ export default MainStackNavigator = createStackNavigator(
       screen: Index,
       navigationOptions: ({ navigation }) => {
         return {
-          header: null
+          header: null,
+          gesturesEnabled: false
         };
       }
     },
@@ -28,7 +30,8 @@ export default MainStackNavigator = createStackNavigator(
       screen: Login,
       navigationOptions: ({ navigation }) => {
         return {
-          header: null
+          header: null,
+          gesturesEnabled: false
         };
       }
     },
@@ -36,7 +39,8 @@ export default MainStackNavigator = createStackNavigator(
       screen: SelectBeliefs,
       navigationOptions: ({ navigation }) => {
         return {
-          header: null
+          header: null,
+          gesturesEnabled: false
         };
       }
     },
@@ -44,7 +48,17 @@ export default MainStackNavigator = createStackNavigator(
       screen: SelectedBeliefs,
       navigationOptions: ({ navigation }) => {
         return {
-          header: null
+          header: null,
+          gesturesEnabled: false
+        };
+      }
+    },
+    home: {
+      screen: Home,
+      navigationOptions: ({ navigation }) => {
+        return {
+          header: null,
+          gesturesEnabled: false
         };
       }
     },
@@ -63,7 +77,7 @@ export default MainStackNavigator = createStackNavigator(
             <HeaderBackButton
               tintColor={"black"}
               onPress={() => {
-                navigation.navigate("chat");
+                navigation.navigate("home");
               }}
             />
           )
@@ -74,7 +88,8 @@ export default MainStackNavigator = createStackNavigator(
       screen: Meditation,
       navigationOptions: ({ navigation }) => {
         return {
-          header: null
+          header: null,
+          gesturesEnabled: false
         };
       }
     }

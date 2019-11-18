@@ -1,55 +1,23 @@
 import React, { Component } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  Text,
-  AsyncStorage
-} from "react-native";
-
-const CollectionsList = require("collections/list");
-
-const { width, height } = Dimensions.get(
-  "window"
-);
+import { View, AsyncStorage } from "react-native";
 
 export default class Index extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: ""
-    };
+    this.state = {};
   }
 
   async componentDidMount() {
     // await AsyncStorage.clear();
 
-    var name = await AsyncStorage.getItem("name");
-    name = name === null ? false : name;
+    var userName = await AsyncStorage.getItem(
+      "name"
+    );
+    userName =
+      userName == null ? false : userName;
 
-    if (name) {
-      this.props.navigation.navigate("chat");
-      /*
-      array = new CollectionsList();
-      array.add(
-        "29632410-eee7-11e9-a3c0-c3b2e1d3cd64.caf"
-      );
-      array.add(
-        "29632410-eee7-11e9-a3c0-c3b2e1d3cd64.caf"
-      );
-      array.add(
-        "29632410-eee7-11e9-a3c0-c3b2e1d3cd64.caf"
-      );
-
-      this.props.navigation.navigate(
-        "meditation",
-        {
-          audioFileNames: array,
-          texts: ["1", "2", "3"]
-        }
-      );*/
+    if (userName) {
+      this.props.navigation.navigate("home");
     } else {
       this.props.navigation.navigate("login");
     }
@@ -58,14 +26,3 @@ export default class Index extends Component {
     return <View></View>;
   }
 }
-
-const styles = StyleSheet.create({
-  _textInput: {
-    width: width - 100,
-    fontSize: 15,
-    padding: 10,
-    borderWidth: 0.5,
-    borderColor: "#bebebe",
-    borderRadius: 10
-  }
-});

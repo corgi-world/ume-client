@@ -114,7 +114,7 @@ export default class SelectedBeliefs extends Component {
           <TouchableOpacity
             onPress={() => {
               this.props.navigation.navigate(
-                "chat"
+                "home"
               );
             }}
             style={{

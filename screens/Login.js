@@ -17,25 +17,21 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: "",
       name: ""
     };
   }
 
-  async componentDidMount() {
-    var name = await AsyncStorage.getItem("name");
-    name = name === null ? false : name;
-
-    if (name) {
-      this.props.navigation.navigate(
-        "selectBeliefs"
-      );
-    }
-  }
+  async componentDidMount() {}
 
   _onPress = async () => {
     await AsyncStorage.setItem(
       "name",
       this.state.name
+    );
+    await AsyncStorage.setItem(
+      "id",
+      this.state.id
     );
     this.props.navigation.navigate(
       "selectBeliefs"
@@ -51,6 +47,18 @@ export default class Login extends Component {
           alignItems: "center"
         }}
       >
+        <TextInput
+          style={[
+            styles._textInput,
+            { marginBottom: 10 }
+          ]}
+          autoCorrect={false}
+          placeholder={"아이디"}
+          returnKeyType={"done"}
+          onChangeText={text => {
+            this.setState({ id: text });
+          }}
+        />
         <TextInput
           style={[
             styles._textInput,
