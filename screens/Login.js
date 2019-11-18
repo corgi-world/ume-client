@@ -9,6 +9,8 @@ import {
   AsyncStorage
 } from "react-native";
 
+import Communication from "../utility/Communication";
+
 const { width, height } = Dimensions.get(
   "window"
 );
@@ -22,9 +24,16 @@ export default class Login extends Component {
     };
   }
 
-  async componentDidMount() {}
-
   _onPress = async () => {
+    const { id, name } = this.state;
+    const data = await Communication(
+      "signup",
+      { id, name },
+      "gg"
+    );
+
+    console.log(data);
+
     await AsyncStorage.setItem(
       "name",
       this.state.name
