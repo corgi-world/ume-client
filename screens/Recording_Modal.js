@@ -33,11 +33,17 @@ class Icon {
   }
 }
 
-const ICON_RECORD_BUTTON = new Icon(
-  require("../assets/images/record_button.png"),
+const ICON_RECORD_BUTTON_1 = new Icon(
+  require("../assets/images/record_button_1.png"),
   70,
   119
 );
+const ICON_RECORD_BUTTON_2 = new Icon(
+  require("../assets/images/record_button_2.png"),
+  70,
+  119
+);
+
 const ICON_RECORDING = new Icon(
   require("../assets/images/record_icon.png"),
   20,
@@ -423,47 +429,22 @@ export default class Recording extends React.Component {
           >
             <Image
               style={styles.image}
-              source={ICON_RECORD_BUTTON.module}
+              source={
+                this.state.isRecording
+                  ? ICON_RECORD_BUTTON_2.module
+                  : ICON_RECORD_BUTTON_1.module
+              }
             />
           </TouchableHighlight>
           <Text
             style={{
-              fontSize: 16
+              fontSize: 16,
+              marginTop: 10,
+              marginBottom: 5
             }}
           >
             {this._getRecordingTimestamp()}
           </Text>
-
-          {this.state.isRecording ? (
-            <View
-              style={{
-                height: 40,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Image
-                style={{
-                  opacity: this.state.isRecording
-                    ? 1.0
-                    : 0.0
-                }}
-                source={ICON_RECORDING.module}
-              />
-              <Text
-                style={{
-                  fontSize: 18
-                }}
-              >
-                {this.state.isRecording
-                  ? " LIVE"
-                  : ""}
-              </Text>
-            </View>
-          ) : (
-            <View />
-          )}
         </View>
       </View>
     );

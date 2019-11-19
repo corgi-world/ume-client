@@ -28,17 +28,22 @@ class Icon {
 }
 
 const ICON_PLAY_BUTTON = new Icon(
-  require("../assets/images/play_button.png"),
+  require("../assets/images/play_button_1.png"),
   34,
   51
 );
 const ICON_PAUSE_BUTTON = new Icon(
-  require("../assets/images/pause_button.png"),
+  require("../assets/images/pause_button_1.png"),
   34,
   51
 );
 const ICON_STOP_BUTTON = new Icon(
-  require("../assets/images/stop_button.png"),
+  require("../assets/images/stop_button_1.png"),
+  22,
+  22
+);
+const ICON_EXIT_BUTTON = new Icon(
+  require("../assets/images/exit_button.png"),
   22,
   22
 );
@@ -495,6 +500,43 @@ export default class Meditation extends React.Component {
             </View>
           </View>
         </SafeAreaView>
+
+        <SafeAreaView
+          style={{
+            width: DEVICE_WIDTH,
+            height: 90,
+            position: "absolute",
+            right: 0,
+            top: 0,
+            zIndex: 5
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              alignItems: "flex-end",
+              marginTop: 5,
+              marginRight: 15
+            }}
+          >
+            <TouchableOpacity
+              underlayColor={BACKGROUND_COLOR}
+              style={styles.wrapper}
+              onPress={() => {
+                this._onStopPressed();
+                this.props.navigation.navigate(
+                  "home"
+                );
+              }}
+            >
+              <Image
+                style={styles.image}
+                source={ICON_EXIT_BUTTON.module}
+                resizeMode={"contain"}
+              />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
       </View>
     );
   }
@@ -509,8 +551,8 @@ const styles = StyleSheet.create({
     alignSelf: "stretch"
   },
   image: {
-    width: 25,
-    height: 25
+    width: 50,
+    height: 50
   },
   volumeSlider: {
     width:

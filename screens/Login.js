@@ -6,7 +6,8 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
-  AsyncStorage
+  AsyncStorage,
+  Alert
 } from "react-native";
 
 import Communication from "../utility/Communication";
@@ -24,27 +25,52 @@ export default class Login extends Component {
     };
   }
 
+  _showAlert(text, cancelText) {
+    Alert.alert(
+      text,
+      "",
+      [
+        {
+          text: cancelText
+        }
+      ],
+      { cancelable: false }
+    );
+  }
+
   _onPress = async () => {
     const { id, name } = this.state;
     const data = await Communication(
-      "signup",
+      "login",
       { id, name },
-      "gg"
+      "login error"
     );
 
-    console.log(data);
+    const result = data.result;
+    const isIdDuplicated = data.isIdDuplicated;
 
-    await AsyncStorage.setItem(
-      "name",
-      this.state.name
-    );
-    await AsyncStorage.setItem(
-      "id",
-      this.state.id
-    );
-    this.props.navigation.navigate(
-      "selectBeliefs"
-    );
+    if (result == "OK") {
+      if (isIdDuplicated) {
+        this._showAlert(
+          "이미 중복된 아이디입니다.",
+          "닫기"
+        );
+      } else {
+        await AsyncStorage.setItem(
+          "name",
+          this.state.name
+        );
+        await AsyncStorage.setItem(
+          "id",
+          this.state.id
+        );
+        this.props.navigation.navigate(
+          "selectBeliefs"
+        );
+      }
+    } else {
+      this._showAlert("통신 오류", "닫기");
+    }
   };
 
   render() {

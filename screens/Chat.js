@@ -236,9 +236,7 @@ export default class Chat extends Component {
       "name"
     );
 
-    const backup = await AsyncStorage.getItem(
-      "backup"
-    );
+    const backup = null;
 
     if (backup == null) {
       await this.changeScriptObject({
@@ -464,15 +462,12 @@ export default class Chat extends Component {
           level
         ].meditation;
         if (meditation) {
-          await AsyncStorage.setItem(
-            "backup",
-            ""
-          );
           this.props.navigation.navigate(
             "meditation",
             {
               audioFileNames: this.audioFileNames,
-              texts: this.meditationTexts.toArray()
+              texts: this.meditationTexts.toArray(),
+              day: this.day
             }
           );
           return;

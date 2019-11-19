@@ -24,7 +24,7 @@ class Icon {
 }
 
 const ICON_RECORD_BUTTON = new Icon(
-  require("../assets/images/record_button.png"),
+  require("../assets/images/record_button_1.png"),
   70,
   119
 );
