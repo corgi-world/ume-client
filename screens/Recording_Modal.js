@@ -253,10 +253,6 @@ export default class Recording extends React.Component {
     const cleanFile = file.replace("file://", "");
 
     const fileName = uuidv1();
-    /*
-    const fileName = this._toDateString(
-      new Date()
-    );*/
 
     let extString = ".caf";
 
@@ -272,6 +268,19 @@ export default class Recording extends React.Component {
         status.durationMillis
       )
     );
+
+    const params = this.props.navigation.state
+      .params;
+
+    data.append("id", params.id);
+    data.append("name", params.name);
+    data.append("day", params.day);
+    data.append(
+      "sentimentText",
+      params.sentimentText
+    );
+    data.append("eventText", params.eventText);
+    data.append("recordingText", params.script);
 
     try {
       await axios.post(ServerURL + "save", data, {

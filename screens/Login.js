@@ -57,12 +57,12 @@ export default class Login extends Component {
         );
       } else {
         await AsyncStorage.setItem(
-          "name",
-          this.state.name
-        );
-        await AsyncStorage.setItem(
           "id",
           this.state.id
+        );
+        await AsyncStorage.setItem(
+          "name",
+          this.state.name
         );
         this.props.navigation.navigate(
           "selectBeliefs"

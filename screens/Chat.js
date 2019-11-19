@@ -27,6 +27,7 @@ export default class Chat extends Component {
   constructor(props) {
     super(props);
 
+    this.userID = "";
     this.userName = "";
 
     this.scriptObject = {};
@@ -153,7 +154,7 @@ export default class Chat extends Component {
     }
   }
 
-  async callServer(url, parameter) {
+  async callServer(url, parameter, log) {
     let result = null;
 
     try {
@@ -163,7 +164,7 @@ export default class Chat extends Component {
         { timeout: 2000 }
       );
     } catch (err) {
-      console.log("script get error");
+      console.log(log);
     }
 
     return result.data;
@@ -172,7 +173,8 @@ export default class Chat extends Component {
   async changeScriptObject(p) {
     this.scriptObject = await this.callServer(
       "script/get",
-      p
+      p,
+      "script error"
     );
 
     if (p.scriptType === "contents") {
@@ -232,6 +234,9 @@ export default class Chat extends Component {
     this.day = await AsyncStorage.getItem("day");
     if (this.day == null) this.day = 0;
 
+    this.userID = await AsyncStorage.getItem(
+      "id"
+    );
     this.userName = await AsyncStorage.getItem(
       "name"
     );
@@ -363,7 +368,25 @@ export default class Chat extends Component {
     });
   };
 
+  async _saveInput(type, text) {
+    const obj = {};
+    obj.id = this.userID;
+    obj.name = this.userName;
+    obj.day = this.day;
+    obj.sentimentText = this.sentimentText;
+    obj.eventText = this.eventText;
+    obj.type = type;
+    obj.text = text;
+    await this.callServer(
+      "saveInput",
+      obj,
+      "save Input error"
+    );
+  }
+
   _pushedInputBlock = async (index, text) => {
+    this._saveInput("button", text);
+
     const { follow, mode, level } = this.state;
 
     let nextFollow = follow;
@@ -450,6 +473,11 @@ export default class Chat extends Component {
           this.props.navigation.navigate(
             "recording_modal",
             {
+              id: this.userID,
+              name: this.userName,
+              day: this.day,
+              sentimentText: this.sentimentText,
+              eventText: this.eventText,
               script: recordingText,
               _scrollToEnd: this._scrollToEnd,
               _record: this._record
@@ -497,6 +525,8 @@ export default class Chat extends Component {
     );
   };
   _sendText = async text => {
+    this._saveInput("text", text);
+
     const { follow, mode, level } = this.state;
 
     let nextFollow = follow;
