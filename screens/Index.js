@@ -10,14 +10,6 @@ export default class Index extends Component {
   }
 
   async _setDay(id) {
-    const date1 = new Date();
-    const date2 = new Date("2019-11-19");
-    const diffTime = Math.abs(date2 - date1);
-    const diffDays = Math.floor(
-      diffTime / (1000 * 60 * 60 * 24)
-    );
-    // console.log(diffDays + " " + diffTime);
-
     const data = await Communication(
       "getDate",
       { id },
@@ -26,8 +18,14 @@ export default class Index extends Component {
 
     const result = data.result;
     if (result == "OK") {
-      const recentDate = data.recentDate;
-      // console.log(recentDate);
+      const loginDate = new Date(data.loginDate);
+
+      const now = new Date();
+      const diffTime = Math.abs(now - loginDate);
+      const diffDays = Math.floor(
+        diffTime / (1000 * 60 * 60 * 24)
+      );
+      console.log(diffDays); // save day
     } else {
     }
   }
@@ -38,9 +36,8 @@ export default class Index extends Component {
     var id = await AsyncStorage.getItem("id");
     id = id == null ? false : id;
 
-    this._setDay(id);
-
     if (id) {
+      this._setDay(id);
       this.props.navigation.navigate("home");
     } else {
       this.props.navigation.navigate("login");

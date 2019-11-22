@@ -407,36 +407,29 @@ export default class Meditation extends React.Component {
       <View style={{ flex: 1 }}>
         <View
           style={{
-            flex: 1
+            flex: 1,
+            backgroundColor: "#EFEFEF"
           }}
         >
-          <ImageBackground
-            source={require("../assets/images/back2.png")}
+          <View
             style={{
-              width: "100%",
-              height: "100%"
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 20
             }}
           >
-            <View
+            <Text
               style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                paddingHorizontal: 20
+                fontSize: 20,
+                color: "black",
+                textAlign: "center",
+                fontFamily: "NanumSquareRegular"
               }}
             >
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: "black",
-                  textAlign: "center",
-                  fontFamily: "NanumSquareRegular"
-                }}
-              >
-                {mt}
-              </Text>
-            </View>
-          </ImageBackground>
+              {mt}
+            </Text>
+          </View>
         </View>
         <SafeAreaView
           style={{
@@ -530,7 +523,12 @@ export default class Meditation extends React.Component {
               }}
             >
               <Image
-                style={styles.image}
+                style={{
+                  width: 38,
+                  height: 38,
+                  marginTop: 10,
+                  marginRight: 10
+                }}
                 source={ICON_EXIT_BUTTON.module}
                 resizeMode={"contain"}
               />
@@ -552,7 +550,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 50,
-    height: 50
+    height: 50,
+    opacity: 0.8
   },
   volumeSlider: {
     width:

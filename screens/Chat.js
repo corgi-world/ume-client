@@ -234,6 +234,8 @@ export default class Chat extends Component {
     this.day = await AsyncStorage.getItem("day");
     if (this.day == null) this.day = 0;
 
+    // this.day = 0;
+
     this.userID = await AsyncStorage.getItem(
       "id"
     );
@@ -502,6 +504,8 @@ export default class Chat extends Component {
         }
 
         await this.changeScriptObject({
+          id: this.userID,
+          name: this.userName,
           scriptType: "contents",
           sentiment: this.sentiment,
           event: this.event,
@@ -579,6 +583,8 @@ export default class Chat extends Component {
         nextLevel += 1;
       } else if (level == endLevel) {
         await this.changeScriptObject({
+          id: this.userID,
+          name: this.userName,
           scriptType: "contents",
           sentiment: this.sentiment,
           event: this.event,
@@ -613,6 +619,8 @@ export default class Chat extends Component {
         this.audioFileNames.add(fileName);
       } else if (level == endLevel) {
         await this.changeScriptObject({
+          id: this.userID,
+          name: this.userName,
           scriptType: "contents",
           sentiment: this.sentiment,
           event: this.event,
