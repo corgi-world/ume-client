@@ -18,14 +18,27 @@ export default class Index extends Component {
 
     const result = data.result;
     if (result == "OK") {
-      const loginDate = new Date(data.loginDate);
+      const loginDate = data.loginDate;
 
       const now = new Date();
-      const diffTime = Math.abs(now - loginDate);
-      const diffDays = Math.floor(
-        diffTime / (1000 * 60 * 60 * 24)
+      const start = new Date(
+        now.getFullYear(),
+        0,
+        0
       );
-      console.log(diffDays); // save day
+      const diff = now - start;
+      const oneDay = 1000 * 60 * 60 * 24;
+      const nowDay = Math.floor(diff / oneDay);
+      const day = nowDay - loginDate;
+
+      console.log(
+        loginDate + " " + nowDay + " " + day
+      );
+
+      await AsyncStorage.setItem(
+        "day",
+        day.toString()
+      );
     } else {
     }
   }

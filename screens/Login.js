@@ -64,9 +64,7 @@ export default class Login extends Component {
           "name",
           this.state.name
         );
-        this.props.navigation.navigate(
-          "selectBeliefs"
-        );
+        this.props.navigation.navigate("home");
       }
     } else {
       this._showAlert("통신 오류", "닫기");
@@ -88,7 +86,9 @@ export default class Login extends Component {
             { marginBottom: 10 }
           ]}
           autoCorrect={false}
-          placeholder={"아이디"}
+          placeholder={
+            "안내문에 적힌 아이디를 입력해주세요"
+          }
           returnKeyType={"done"}
           onChangeText={text => {
             this.setState({ id: text });
@@ -100,7 +100,9 @@ export default class Login extends Component {
             { marginBottom: 10 }
           ]}
           autoCorrect={false}
-          placeholder={"이름"}
+          placeholder={
+            "성을 제외한 이름을 입력해주세요"
+          }
           returnKeyType={"done"}
           onChangeText={text => {
             this.setState({ name: text });

@@ -12,7 +12,7 @@ const callServer = async (
     result = await axios.post(
       ServerURL + url,
       parameter,
-      { timeout: 2000 }
+      { timeout: 3000 }
     );
   } catch (err) {
     console.log(log);

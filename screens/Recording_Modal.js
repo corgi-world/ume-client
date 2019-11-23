@@ -20,6 +20,8 @@ import uuidv1 from "uuid/v1";
 
 import _Gif from "../components/message/_GIF";
 
+import { isIphoneX } from "react-native-iphone-x-helper";
+
 const { width, height } = Dimensions.get(
   "window"
 );
@@ -35,13 +37,13 @@ class Icon {
 
 const ICON_RECORD_BUTTON_1 = new Icon(
   require("../assets/images/record_button_1.png"),
-  70,
-  119
+  50,
+  50
 );
 const ICON_RECORD_BUTTON_2 = new Icon(
   require("../assets/images/record_button_2.png"),
-  70,
-  119
+  50,
+  50
 );
 
 const ICON_RECORDING = new Icon(
@@ -339,8 +341,15 @@ export default class Recording extends React.Component {
       .params;
     const script = params.script;
 
-    const micHeight = 180;
-    const top = 120;
+    const micHeight = 130;
+    let top = 0;
+
+    if (isIphoneX()) {
+      top = height / 6;
+    } else {
+      top = 40;
+    }
+
     const scriptHeigth =
       height - top * 2 - micHeight;
     const horizontalRate = 6;
@@ -359,6 +368,10 @@ export default class Recording extends React.Component {
           </Text>
         </View>
       );
+    }
+
+    if (!this.state.fontLoaded) {
+      return <View></View>;
     }
 
     return (
@@ -406,7 +419,7 @@ export default class Recording extends React.Component {
             ) : (
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: 16,
                   textAlign: "center",
                   fontFamily: "NanumSquareRegular"
                 }}
@@ -427,8 +440,7 @@ export default class Recording extends React.Component {
             bottom: 0,
             zIndex: 5,
             justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 7
+            alignItems: "center"
           }}
         >
           <TouchableHighlight
@@ -437,7 +449,7 @@ export default class Recording extends React.Component {
             disabled={this.state.isLoading}
           >
             <Image
-              style={styles.image}
+              style={{ width: 70, height: 70 }}
               source={
                 this.state.isRecording
                   ? ICON_RECORD_BUTTON_2.module
@@ -448,7 +460,7 @@ export default class Recording extends React.Component {
           <Text
             style={{
               fontSize: 16,
-              marginTop: 10,
+              marginTop: 5,
               marginBottom: 5
             }}
           >

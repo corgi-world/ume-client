@@ -10,6 +10,8 @@ import * as Font from "expo-font";
 
 import Colors from "../../utility/Colors";
 
+import { isIphoneX } from "react-native-iphone-x-helper";
+
 export default class Buttons extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +34,14 @@ export default class Buttons extends Component {
   }
 
   render() {
+    let bottomOffset = 0;
+
+    if (isIphoneX()) {
+      bottomOffset = 0;
+    } else {
+      bottomOffset = 10;
+    }
+
     const { script } = this.props;
 
     let items = {};
@@ -87,7 +97,8 @@ export default class Buttons extends Component {
             style={{
               flexDirection: "row",
               borderTopWidth: 0.5,
-              paddingTop: 15,
+              paddingTop: 10,
+              paddingBottom: bottomOffset,
               justifyContent: "center"
             }}
           >
@@ -104,7 +115,8 @@ export default class Buttons extends Component {
             style={{
               flexDirection: "row",
               borderTopWidth: 0.5,
-              paddingTop: 15,
+              paddingTop: 10,
+              paddingBottom: bottomOffset,
               paddingLeft: 20
             }}
           >
