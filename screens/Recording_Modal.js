@@ -254,7 +254,16 @@ export default class Recording extends React.Component {
     const data = new FormData();
     const cleanFile = file.replace("file://", "");
 
-    const fileName = uuidv1();
+    const params = this.props.navigation.state
+      .params;
+
+    const fileName =
+      params.id +
+      "-" +
+      "day" +
+      params.day +
+      "-" +
+      uuidv1();
 
     let extString = ".caf";
 
@@ -270,9 +279,6 @@ export default class Recording extends React.Component {
         status.durationMillis
       )
     );
-
-    const params = this.props.navigation.state
-      .params;
 
     data.append("id", params.id);
     data.append("name", params.name);

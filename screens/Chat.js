@@ -234,8 +234,8 @@ export default class Chat extends Component {
     this.day = await AsyncStorage.getItem("day");
     if (this.day == null) this.day = 0;
 
-    // this.day = 2;
-    console.log(this.day);
+    // this.day = 0;
+    // console.log(this.day);
 
     this.userID = await AsyncStorage.getItem(
       "id"

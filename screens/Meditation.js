@@ -118,9 +118,12 @@ export default class Meditation extends React.Component {
       .params;
     const audioFileNames = params.audioFileNames.toArray();
     const length = audioFileNames.length;
+    const day = params.day;
+
+    console.log("meditation : " + day);
 
     this.bgm = await this._selectedAudioFile(
-      "bgm.mp3",
+      "bgm" + day + ".mp3",
       true,
       0.4
     );
