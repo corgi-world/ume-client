@@ -6,7 +6,8 @@ import {
   Text,
   TouchableHighlight,
   View,
-  ScrollView
+  ScrollView,
+  Platform
 } from "react-native";
 
 import * as Font from "expo-font";
@@ -179,6 +180,7 @@ export default class Recording extends React.Component {
     } catch (error) {
       // Do nothing -- we are already unloaded.
     }
+
     const info = await FileSystem.getInfoAsync(
       this.recording.getURI()
     );
@@ -252,7 +254,21 @@ export default class Recording extends React.Component {
 
   _saveRecording = async (file, status) => {
     const data = new FormData();
-    const cleanFile = file.replace("file://", "");
+    let cleanFile = "";
+    let fileType = "";
+    let extString = "";
+
+    if (Platform.OS == "android") {
+      cleanFile = file;
+      extString = ".caf";
+      fileType = "audio/caf";
+    } else {
+      cleanFile = file.replace("file://", "");
+      extString = ".caf";
+      fileType = "audio/caf";
+    }
+
+    console.log(cleanFile);
 
     const params = this.props.navigation.state
       .params;
@@ -265,10 +281,9 @@ export default class Recording extends React.Component {
       "-" +
       uuidv1();
 
-    let extString = ".caf";
-
     data.append("audio", {
       name: fileName + extString,
+      type: fileType,
       uri: cleanFile
     });
 
@@ -300,7 +315,7 @@ export default class Recording extends React.Component {
 
       return fileName + extString;
     } catch (error) {
-      console.log("error");
+      console.log(error);
 
       return null;
     }

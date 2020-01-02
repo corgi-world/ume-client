@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "ume-test",
-    "slug": "ume-test",
+    "name": "ume",
+    "slug": "ume",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "3.0.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,7 +19,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.haii.ume"
+      "bundleIdentifier": "com.jy.ume"
     }
   }
 }

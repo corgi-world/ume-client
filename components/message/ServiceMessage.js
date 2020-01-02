@@ -97,8 +97,8 @@ export default class ServiceMesseage extends Component {
             <View
               style={
                 this.props.isFirst
-                  ? styles.first_message
-                  : styles.second_message
+                  ? styles.first_message_gif
+                  : styles.second_message_gif
               }
             >
               <_Gif gif={gif} _maxWidth={205} />
@@ -154,11 +154,21 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 15,
     backgroundColor: Colors.serviceMessageBack,
-    maxWidth: width - 150
+    maxWidth: width * 0.6
   },
   second_message: {
     borderRadius: 15,
     backgroundColor: Colors.serviceMessageBack,
-    maxWidth: width - 150
+    maxWidth: width * 0.6
+  },
+  first_message_gif: {
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
+    borderBottomLeftRadius: 15,
+    backgroundColor: Colors.serviceMessageBack
+  },
+  second_message_gif: {
+    borderRadius: 15,
+    backgroundColor: Colors.serviceMessageBack
   }
 });

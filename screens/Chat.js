@@ -5,7 +5,9 @@ import {
   ScrollView,
   Keyboard,
   Text,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions,
+  Platform
 } from "react-native";
 
 import ServerURL from "../utility/ServerURL";
@@ -22,6 +24,10 @@ import Waiting from "../components/Inputs/Waiting";
 import Buttons from "../components/Inputs/Buttons";
 import TextBox from "../components/Inputs/TextBox";
 import Recording from "../components/Inputs/Recording";
+
+const { width, height } = Dimensions.get(
+  "window"
+);
 
 export default class Chat extends Component {
   constructor(props) {
@@ -135,7 +141,17 @@ export default class Chat extends Component {
     this.scroll.scrollToEnd({ animated: true });
   };
   _keyboardDidShow() {
-    this._scrollToEnd();
+    if (this.isUnmount) {
+      return;
+    }
+
+    if (Platform.OS == "android") {
+      setTimeout(() => {
+        this._scrollToEnd();
+      }, 200);
+    } else {
+      this._scrollToEnd();
+    }
   }
   _keyboardDidHide() {
     this._scrollToEnd();
@@ -234,7 +250,7 @@ export default class Chat extends Component {
     this.day = await AsyncStorage.getItem("day");
     if (this.day == null) this.day = 0;
 
-    // this.day = 0;
+    this.day = 1;
     // console.log(this.day);
 
     this.userID = await AsyncStorage.getItem(
@@ -304,7 +320,13 @@ export default class Chat extends Component {
             }}
             style={{
               flex: 1,
-              backgroundColor: "white"
+              backgroundColor: "white",
+              ...Platform.select({
+                ios: {},
+                android: {
+                  paddingTop: 5
+                }
+              })
             }}
             onContentSizeChange={() => {
               this._scrollToEnd();

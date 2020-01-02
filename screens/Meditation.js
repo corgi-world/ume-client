@@ -2,13 +2,12 @@ import React from "react";
 import {
   Dimensions,
   Image,
-  Slider,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   SafeAreaView,
-  ImageBackground
+  Platform
 } from "react-native";
 
 import { Asset } from "expo-asset";
@@ -511,8 +510,15 @@ export default class Meditation extends React.Component {
             style={{
               flex: 1,
               alignItems: "flex-end",
-              marginTop: 5,
-              marginRight: 15
+              marginRight: 15,
+              ...Platform.select({
+                ios: {
+                  marginTop: 5
+                },
+                android: {
+                  marginTop: 27
+                }
+              })
             }}
           >
             <TouchableOpacity
