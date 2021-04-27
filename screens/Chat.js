@@ -7,7 +7,7 @@ import {
   Text,
   AsyncStorage,
   Dimensions,
-  Platform
+  Platform,
 } from "react-native";
 
 import ServerURL from "../utility/ServerURL";
@@ -51,7 +51,7 @@ export default class Chat extends Component {
 
     this.followEnum = {
       none: 0,
-      main: 1
+      main: 1,
     };
 
     this.modeEnum = {
@@ -59,17 +59,17 @@ export default class Chat extends Component {
       wait: 1,
       button: 2,
       text: 3,
-      record: 4
+      record: 4,
     };
 
     this.inputTypes = {
       button: this.modeEnum.button,
-      text: this.modeEnum.text
+      text: this.modeEnum.text,
     };
 
     this.messageTypeEnum = {
       service: 0,
-      user: 1
+      user: 1,
     };
 
     this.state = {
@@ -77,7 +77,7 @@ export default class Chat extends Component {
       mode: this.modeEnum.text,
       level: 0,
 
-      messages: {}
+      messages: {},
     };
 
     this.isUnmount = false;
@@ -95,7 +95,7 @@ export default class Chat extends Component {
         eventText: this.eventText,
         meditationTexts: this.meditationTexts,
         audioFileNames: this.audioFileNames,
-        state: this.state
+        state: this.state,
       };
 
       const s = JSON.stringify(backup);
@@ -103,7 +103,7 @@ export default class Chat extends Component {
     }
   };
 
-  _restore = async backup => {
+  _restore = async (backup) => {
     const obj = JSON.parse(backup);
     this.day = obj.day;
     this.scriptObject = obj.scriptObject;
@@ -130,7 +130,7 @@ export default class Chat extends Component {
       mode: obj.state.mode,
       level: obj.state.level,
 
-      messages: obj.state.messages
+      messages: obj.state.messages,
     });
   };
 
@@ -250,7 +250,7 @@ export default class Chat extends Component {
     this.day = await AsyncStorage.getItem("day");
     if (this.day == null) this.day = 0;
 
-    this.day = 1;
+    this.day = 0;
     // console.log(this.day);
 
     this.userID = await AsyncStorage.getItem(
@@ -265,7 +265,7 @@ export default class Chat extends Component {
     if (backup == null) {
       await this.changeScriptObject({
         scriptType: "openings",
-        day: this.day
+        day: this.day,
       });
 
       const serviceMessageId = uuidv1();
@@ -276,11 +276,11 @@ export default class Chat extends Component {
           isComplete: false,
           texts: this.scriptObject[0].messages,
           delays: this.scriptObject[0].delays,
-          gif: this.scriptObject[0].gif
-        }
+          gif: this.scriptObject[0].gif,
+        },
       };
 
-      this.setState(prevState => {
+      this.setState((prevState) => {
         const newState = {
           ...prevState,
           follow: this.followEnum.main,
@@ -288,8 +288,8 @@ export default class Chat extends Component {
           level: 0,
           messages: {
             ...prevState.messages,
-            ...serviceObject
-          }
+            ...serviceObject,
+          },
         };
 
         return { ...newState };
@@ -311,11 +311,11 @@ export default class Chat extends Component {
       <View style={{ flex: 1 }}>
         <SafeAreaView
           style={{
-            flex: 1
+            flex: 1,
           }}
         >
           <ScrollView
-            ref={scroll => {
+            ref={(scroll) => {
               this.scroll = scroll;
             }}
             style={{
@@ -324,20 +324,20 @@ export default class Chat extends Component {
               ...Platform.select({
                 ios: {},
                 android: {
-                  paddingTop: 5
-                }
-              })
+                  paddingTop: 5,
+                },
+              }),
             }}
             onContentSizeChange={() => {
               this._scrollToEnd();
             }}
-            onScroll={event => {}}
-            onScrollEndDrag={event => {}}
+            onScroll={(event) => {}}
+            onScrollEndDrag={(event) => {}}
             scrollEventThrottle={160}
           >
             {Object.values(
               this.state.messages
-            ).map(message => {
+            ).map((message) => {
               return (
                 <MessageManager
                   key={message.id}
@@ -371,7 +371,7 @@ export default class Chat extends Component {
     );
   }
 
-  _updateComplete = async id => {
+  _updateComplete = async (id) => {
     // this._backup();
 
     const { follow, mode, level } = this.state;
@@ -389,7 +389,7 @@ export default class Chat extends Component {
     this.setState({
       follow: nextFollow,
       mode: nextMode,
-      level: nextLevel
+      level: nextLevel,
     });
   };
 
@@ -505,7 +505,7 @@ export default class Chat extends Component {
               eventText: this.eventText,
               script: recordingText,
               _scrollToEnd: this._scrollToEnd,
-              _record: this._record
+              _record: this._record,
             }
           );
           return;
@@ -520,7 +520,7 @@ export default class Chat extends Component {
             {
               audioFileNames: this.audioFileNames,
               texts: this.meditationTexts.toArray(),
-              day: this.day
+              day: this.day,
             }
           );
           return;
@@ -533,7 +533,7 @@ export default class Chat extends Component {
           sentiment: this.sentiment,
           event: this.event,
           day: this.day,
-          contentCount: this.contentCount
+          contentCount: this.contentCount,
         });
 
         nextLevel = 0;
@@ -551,7 +551,7 @@ export default class Chat extends Component {
       focusedIndex
     );
   };
-  _sendText = async text => {
+  _sendText = async (text) => {
     this._saveInput("text", text);
 
     const { follow, mode, level } = this.state;
@@ -612,7 +612,7 @@ export default class Chat extends Component {
           sentiment: this.sentiment,
           event: this.event,
           day: this.day,
-          contentCount: this.contentCount
+          contentCount: this.contentCount,
         });
 
         nextLevel = 0;
@@ -626,7 +626,7 @@ export default class Chat extends Component {
       nextLevel
     );
   };
-  _record = async fileName => {
+  _record = async (fileName) => {
     const { follow, mode, level } = this.state;
 
     this.audioFileName = fileName;
@@ -648,7 +648,7 @@ export default class Chat extends Component {
           sentiment: this.sentiment,
           event: this.event,
           day: this.day,
-          contentCount: this.contentCount
+          contentCount: this.contentCount,
         });
 
         nextLevel = 0;
@@ -687,8 +687,8 @@ export default class Chat extends Component {
         isRecordingCheck,
         isPlayback,
         audioFileName,
-        focusedIndex
-      }
+        focusedIndex,
+      },
     };
 
     const serviceMessageId = uuidv1();
@@ -705,11 +705,11 @@ export default class Chat extends Component {
         isPlayback,
         audioFileName,
         focusedIndex,
-        gif: this.scriptObject[nextLevel].gif
-      }
+        gif: this.scriptObject[nextLevel].gif,
+      },
     };
 
-    this.setState(prevState => {
+    this.setState((prevState) => {
       const newState = {
         ...prevState,
         follow: nextFollow,
@@ -718,8 +718,8 @@ export default class Chat extends Component {
         messages: {
           ...prevState.messages,
           ...userObject,
-          ...serviceObject
-        }
+          ...serviceObject,
+        },
       };
 
       return { ...newState };

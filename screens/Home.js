@@ -63,6 +63,34 @@ export default class Home extends Component {
             대화 시작하기
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{
+            width: width / 2,
+            height: 50,
+            borderRadius: 30,
+            borderWidth: 1,
+            borderColor: "white",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 15
+          }}
+          onPress={() => {
+            this.props.navigation.navigate(
+              "test"
+            );
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "400",
+              color: "white"
+            }}
+          >
+            명상하기
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }

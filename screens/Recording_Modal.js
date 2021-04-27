@@ -260,10 +260,12 @@ export default class Recording extends React.Component {
 
     if (Platform.OS == "android") {
       cleanFile = file;
+
       extString = ".caf";
       fileType = "audio/caf";
     } else {
       cleanFile = file.replace("file://", "");
+
       extString = ".caf";
       fileType = "audio/caf";
     }

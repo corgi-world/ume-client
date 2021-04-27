@@ -11,6 +11,7 @@ import Home from "../screens/Home";
 
 import Chat from "../screens/Chat";
 import Meditation from "../screens/Meditation";
+import Test from "../screens/test";
 
 import SelectBeliefs from "../screens/SelectBeliefs";
 import SelectedBeliefs from "../screens/SelectedBeliefs";
@@ -86,6 +87,15 @@ export default MainStackNavigator = createStackNavigator(
     },
     meditation: {
       screen: Meditation,
+      navigationOptions: ({ navigation }) => {
+        return {
+          header: null,
+          gesturesEnabled: false
+        };
+      }
+    },
+    test: {
+      screen: Test,
       navigationOptions: ({ navigation }) => {
         return {
           header: null,
