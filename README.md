@@ -4,4 +4,5 @@
 
 server : https://github.com/corgi-world/ume-server
 
-![poster](https://github.com/corgi-world/ume-client/blob/master/ume-poster.png)
+![preview](./ume-preview.gif)
+![poster](./ume-poster.png)
