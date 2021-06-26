@@ -4,5 +4,6 @@
 
 server : https://github.com/corgi-world/ume-server
 
-![preview](./ume-preview.gif)
+<img src="./ume-preview.gif" width="50%" />
+
 ![poster](./ume-poster.png)
